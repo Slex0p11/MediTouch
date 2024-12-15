@@ -15,7 +15,7 @@ class medicine(models.Model):
     medicine_name = models.CharField(max_length=200)
     price = models.FloatField()
     description = models.TextField()
-    img_url = models.TextField()
+    image = models.FileField(upload_to='medicineimg/',null=True, blank=True)
     Category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
 
 

@@ -16,7 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from app.views import*
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/allmedicine', AllMedicine.as_view(), name='medicinelist'),
+    path('api/category', AllCategory.as_view(), name='categorylist'),
+    path('createcategory/', createCategory.as_view(), name='createCategory'),
+    path('updateDeletecategory/<int:pk>/', updatedeleteCategory.as_view(), name='updateDeletecategory'),
+    path('addmedicine/', AddMedicine.as_view(), name='addmedicine'),
+    path('updateDeletemedicine/<int:pk>', updateDeletemedicine.as_view(), name='updateDeletemedicine'),
 ]
