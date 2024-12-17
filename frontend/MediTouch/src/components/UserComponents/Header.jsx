@@ -2,7 +2,7 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <><header className='flex shadow-md py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
+    <><header className='flex shadow-md py-4 px-4 sm:px-10 bg-[#aae0b3] font-[sans-serif] min-h-[70px] tracking-wide relative z-50 m-0'>
     <div className='flex flex-wrap items-center justify-between gap-5 w-full'>
       <a href="javascript:void(0)"><img src="file:///C:/Users/acer/Downloads/DALL%C2%B7E%202024-12-09%2013.34.59%20-%20A%20creative%20and%20professional%20healthcare-themed%20logo%20for%20'MediTouch'%20with%20an%20abstract%20icon.%20The%20design%20incorporates%20a%20hand%20outline%20and%20a%20stethoscope%20ble.webp" alt="logo" className='w-36' />
       </a>
@@ -31,13 +31,13 @@ const Header = () => {
               className='hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]'>Home</a>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><a href='javascript:void(0)'
-            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Team</a>
+            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Pharmacy</a>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><a href='javascript:void(0)'
-            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Feature</a>
+            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Apointments</a>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><a href='javascript:void(0)'
-            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Blog</a>
+            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Settings</a>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><a href='javascript:void(0)'
             className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>About</a>
