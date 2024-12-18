@@ -4,7 +4,7 @@ const Header = () => {
   return (
     <><header className='flex shadow-md py-4 px-4 sm:px-10 bg-[#aae0b3] font-[sans-serif] min-h-[70px] tracking-wide relative z-50 m-0'>
     <div className='flex flex-wrap items-center justify-between gap-5 w-full'>
-      <a href="javascript:void(0)"><img src="file:///C:/Users/acer/Downloads/DALL%C2%B7E%202024-12-09%2013.34.59%20-%20A%20creative%20and%20professional%20healthcare-themed%20logo%20for%20'MediTouch'%20with%20an%20abstract%20icon.%20The%20design%20incorporates%20a%20hand%20outline%20and%20a%20stethoscope%20ble.webp" alt="logo" className='w-36' />
+      <a href="javascript:void(0)"><img src="" alt="logo" className='w-36' />
       </a>
 
       <div id="collapseMenu"
