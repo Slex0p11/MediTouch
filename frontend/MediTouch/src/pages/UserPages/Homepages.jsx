@@ -32,7 +32,7 @@ const Homepages = () => {
              </div>
  
              <div className="w-5/6 h-[210px] overflow-hidden mx-auto aspect-w-16 aspect-h-8 md:mb-2 mb-4">
-               <img src="https://assets.truemeds.in/Images/ProductImage/TM-TACR1-030358/pantop-40-tablet-15_pantop-40-tablet-15--TM-TACR1-030358_1.png" alt="Product 1"
+               <img src={items.image} alt={items.medicine_name}
                  className="h-full w-full object-contain" />
              </div>
  
