@@ -2,9 +2,9 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <><header className='flex shadow-md py-4 px-4 sm:px-10 bg-[#aae0b3] font-[sans-serif] min-h-[70px] tracking-wide relative z-50 m-0'>
+    <><header className='flex shadow-md py-4 px-4 sm:px-10 bg-[#5f43b2] font-[sans-serif] min-h-[70px] tracking-wide relative z-50 m-0'>
     <div className='flex flex-wrap items-center justify-between gap-5 w-full'>
-      <a href="javascript:void(0)"><img src="" alt="logo" className='w-36' />
+      <a href="javascript:void(0)"><img src="https://i.imgur.com/YzUHFXW.png" alt="logo" className='md:w-[70px] w-10 rounded-half' />
       </a>
 
       <div id="collapseMenu"
