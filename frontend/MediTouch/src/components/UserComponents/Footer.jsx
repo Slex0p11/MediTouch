@@ -3,7 +3,7 @@ import React from 'react'
 const Footer = () => {
   return (
     <>
-      <footer className="bg-blue-900 px-4 sm:px-6 pt-12 pb-6 font-[sans-serif]">
+      <footer className="bg-[#572f97]-900 px-4 sm:px-6 pt-12 pb-6 font-[sans-serif]">
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         <div className="space-y-4">
           <h6 className="text-sm text-white font-medium">RESOURCES</h6>
