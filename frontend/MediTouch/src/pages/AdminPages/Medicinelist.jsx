@@ -1,10 +1,83 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
+import axios from 'axios'
 
 const medicinelist = () => {
+    const [data,setData] =  useState([])
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/api/allmedicine')
+        .then(res=>(
+            setData(res.data)
+        ))
+        .catch(err=>console.log(err.message))
+    })
+
+
   return (
-    <div>
+    <>
       
-    </div>
+
+<div className="overflow-x-auto shadow-md sm:rounded-lg ml-60">
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+            <th scope="col" className="px-6 py-3">
+                    Id
+                </th>              
+                <th scope="col" className="px-6 py-3">
+                    Medicine name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Image
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Description
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Price
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Category
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {data.map((items)=>(
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={items.id}>
+              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                   {items.id}
+              </th>
+              <td className="px-6 py-4">
+                  {items.medicine_name}
+              </td>
+              <td className="px-6 py-4">
+                  <img src={items.image} alt={items.medicine_name} />
+              </td>
+              <td className="px-6 py-4">
+                  {items.description}
+              </td>
+              <td className="px-6 py-4">
+                  {items.price}
+              </td>
+              <td className="px-6 py-4">
+                  {items.Category}
+              </td>
+              <td class="px-6 py-4">
+                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> &nbsp; &nbsp;
+                    <a href="#" class="font-medium text-blue-600 dark:text-red-500 hover:underline">        Delete</a>
+              </td>
+              
+          </tr>
+            ))}
+            
+             
+        </tbody>
+    </table>
+</div>
+
+    </>
   )
 }
 
