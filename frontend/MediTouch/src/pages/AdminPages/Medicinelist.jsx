@@ -17,7 +17,11 @@ const medicinelist = () => {
       
 
 <div className="overflow-x-auto shadow-md sm:rounded-lg ml-60">
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <div className="flex justify-between mb-5 -mt-79">
+        <h2 className='text-2xl mx-3 font-bold'>Medicine List</h2>
+        <h2 className='text-xl font-bold'>Dashboard/ <span className='text-green-600'>medicine list</span></h2>
+    </div>
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 my-9">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
             <th scope="col" className="px-6 py-3">
@@ -59,7 +63,7 @@ const medicinelist = () => {
                   {items.description}
               </td>
               <td className="px-6 py-4">
-                  {items.price}
+                  Rs. {items.price}
               </td>
               <td className="px-6 py-4">
                   {items.Category}

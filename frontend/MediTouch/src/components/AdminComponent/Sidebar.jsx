@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Sidebar = () => {
   return (
     <>
-      <nav className="bg-white shadow-lg h-screen fixed top-0 left-0 min-w-[250px] py-6 px-4 font-[sans-serif] overflow-auto">
+      <nav className="bg-red-200 shadow-lg h-screen fixed top-0 left-0 min-w-[250px] py-6 px-4 font-[sans-serif] overflow-auto">
       <a href="javascript:void(0)"><img src="https://i.imgur.com/N1qcbi3.png" alt="logo" className='w-[160px]' />
       </a>
 
@@ -39,7 +39,7 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="javascript:void(0)"
+            <a href="/medicineadmin/addmedicine"
               className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all">
               <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
                 viewBox="0 0 24 24">
@@ -52,7 +52,7 @@ const Sidebar = () => {
               <span>Add Medicine</span>
             </a>
           </li>
-          <li>
+          {/* <li>
             <a href="javascript:void(0)"
               className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all">
               <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
@@ -66,8 +66,8 @@ const Sidebar = () => {
               </svg>
               <span>Schedules</span>
             </a>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <a href="javascript:void(0)"
               className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all">
               <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-[18px] h-[18px] mr-4"
@@ -81,11 +81,11 @@ const Sidebar = () => {
               </svg>
               <span>Promote</span>
             </a>
-          </li>
+          </li> */}
         </ul>
       </div>
 
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <h6 className="text-blue-600 text-sm font-bold px-4">Income</h6>
         <ul className="mt-3">
           <li>
@@ -116,7 +116,7 @@ const Sidebar = () => {
             </a>
           </li>
         </ul>
-      </div>
+      </div> */}
 
       <div className="mt-6">
         <h6 className="text-blue-600 text-sm font-bold px-4">Actions</h6>

@@ -4,7 +4,8 @@ import Layout from './components/UserComponents/Layout'
 import Homepages from './pages/UserPages/Homepages'
 import AdminLayout from './components/AdminComponent/AdminLayout'
 import Dashboard from './pages/AdminPages/Dashboard'
-import Medicinelist from './pages/AdminPages/medicinelist'
+import Medicinelist from './pages/AdminPages/Medicinelist'
+import AddMedicine from './pages/AdminPages/AddMedicine'
 
 const Myroutes = () => {
   return (
@@ -19,6 +20,7 @@ const Myroutes = () => {
             <Route path='/medicineadmin/' element={<AdminLayout/>}>
                 <Route index element={<Dashboard/>}/>
                 <Route path='medicinelist' element={<Medicinelist/>}/>
+                <Route path='addmedicine' element={<AddMedicine/>}/>
             </Route>
         </Routes>
       </Router>
