@@ -1,5 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify'
 
 const medicinelist = () => {
     const [data,setData] =  useState([])
@@ -9,13 +11,29 @@ const medicinelist = () => {
             setData(res.data)
         ))
         .catch(err=>console.log(err.message))
-    })
+    }, [])
 
+const deleteContact = async(id) => {
+
+    const confirmDelete = window.confirm("Are you sure you want to delete this Medicine?");
+    
+    if (confirmDelete) {
+        try {
+             
+            await axios.delete(`http://127.0.0.1:8000/updateDeletemedicine/${id}`);
+            setData(data.filter((item) => item.id !== id));  
+            toast.success("Medicine Deleted Successfully");
+        } catch (e) {
+            toast.error("Failed to Delete Medicine. Please try again");
+        }
+    }
+     
+}
 
   return (
     <>
       
-
+<ToastContainer theme='colored' position='top-center' />
 <div className="overflow-x-auto shadow-md sm:rounded-lg ml-60">
     <div className="flex justify-between mb-5 -mt-79">
         <h2 className='text-2xl mx-3 font-bold'>Medicine List</h2>
@@ -68,9 +86,11 @@ const medicinelist = () => {
               <td className="px-6 py-4">
                   {items.Category}
               </td>
-              <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> &nbsp; &nbsp;
-                    <a href="#" class="font-medium text-blue-600 dark:text-red-500 hover:underline">        Delete</a>
+              <td className="px-6 py-4">
+                    <Link to="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link> &nbsp; &nbsp;
+                    <Link to="#" className="font-medium text-blue-600 dark:text-red-500 hover:underline" 
+                    onClick = {()=> deleteContact(items.id)}
+                    >Delete</Link>
               </td>
               
           </tr>
