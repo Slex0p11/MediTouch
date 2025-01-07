@@ -29,12 +29,27 @@ const AddMedicine = () => {
         <input type="number" placeholder="Enter the Price"
           className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black" />
       </div>
+       
+      <div className="flex items-center">
+        <label className="text-gray-400 w-36 text-sm">Category</label>
+        <input type="number" placeholder="Enter the Price"
+          className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black" />
+      </div>
+      
 
       <div className="flex items-center">
         <label className="text-gray-400 w-36 text-sm">Description</label>
         <input type="text" placeholder="Enter the Description"
           className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black" />
       </div>
+      <div className="flex items-center">
+  <label className="text-gray-400 w-36 text-sm">Medicine Image</label>
+  <input 
+    type="file" 
+    accept="image/*" 
+    className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black file:mr-2 file:py-1 file:px-3 file:rounded file:border-none file:bg-gray-200 file:text-sm file:text-black" 
+  />
+</div>
 
       <button type="button"
         className="!mt-8 px-6 py-2 w-full bg-green-400 hover:bg-[#444] text-sm text-white mx-auto block">Submit</button>

@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom'
 
 const Header = () => {
   return (
-    <><header className='flex shadow-md py-4 px-4 sm:px-10 bg-[#572f97] font-[sans-serif] min-h-[70px] tracking-wide relative z-50 m-0'>
+    <><header className='flex shadow-md py-4 px-4 sm:px-10 bg-[#0076C1] font-poppin min-h-[70px] tracking-wide relative z-50 m-0'>
     <div className='flex flex-wrap items-center justify-between gap-5 w-full'>
-      <Link to="javascript:void(0)"><img src="https://i.imgur.com/N1qcbi3.png" alt="logo" className='md:w-[70px] w-10 mx-auto' />
+      <Link to="javascript:void(0)"><img src="https://i.imgur.com/Pul2AD6.png" alt="logo" className='md:w-[70px] w-10 mx-auto' />
       </Link>
 
       <div id="collapseMenu"
         className='max-lg:hidden lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50'>
         <button id="toggleClose" className='lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white w-9 h-9 flex items-center justify-center border'>
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 fill-black" viewBox="0 0 320.591 320.591">
+          <svg xmlns="" className="w-3.5 h-3.5 fill-black" viewBox="0 0 320.591 320.591">
             <path
               d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
               data-original="#000000"></path>
@@ -24,27 +24,27 @@ const Header = () => {
         <ul
           className='lg:flex gap-x-5 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
           <li className='mb-6 hidden max-lg:block'>
-            <Link to="javascript:void(0)"><img src="https://readymadeui.com/readymadeui.svg" alt="logo" className='w-36' />
+            <Link to="javascript:void(0)"><img src="" alt="logo" className='w-36' />
             </Link>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
             <Link to='javascript:void(0)'
-              className='hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]'>Home</Link>
+              className='hover:text-[#FF0000] text-[#000000] block font-semibold text-[15px]'>Home</Link>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><Link to='javascript:void(0)'
-            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Pharmacy</Link>
+            className='hover:text-[#FF0000] text-[#000000] block font-semibold text-[15px]'>Pharmacy</Link>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><Link to='javascript:void(0)'
-            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Apointments</Link>
+            className='hover:text-[#FF0000] text-[#000000] block font-semibold text-[15px]'>Apointments</Link>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><Link to='javascript:void(0)'
-            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Settings</Link>
+            className='hover:text-[#FF0000] text-[#000000] block font-semibold text-[15px]'>Settings</Link>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><Link to='javascript:void(0)'
-            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>About</Link>
+            className='hover:text-[#FF0000] text-[#000000] block font-semibold text-[15px]'>About</Link>
           </li>
           <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><Link to='javascript:void(0)'
-            className='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Contact</Link>
+            className='hover:text-[#FF0000] text-[#000000] block font-semibold text-[15px]'>Contact</Link>
           </li>
         </ul>
       </div>
