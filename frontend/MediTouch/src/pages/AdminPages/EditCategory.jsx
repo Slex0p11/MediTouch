@@ -34,26 +34,25 @@ const EditCategory = () => {
         }))
     }
 
-    const updateCategory = async(e) => {
+    const updateCategory = async (e) => {
         e.preventDefault();
-        try{
-            const response = await axios.patch(`http://127.0.0.1:8000/updateDeletecategory/${id}/`)
-
-            if(response.ok){
-                toast.success("Category updated Sucessfully");
-                setFormData({category_name:''});
-                setTimeout(()=> {
-                    navigate('/medicineadmin/categorylist')
-                },3000)
-
-            }else{
-                toast.error("Update Failed.Please Try again ")
+        try {
+            const response = await axios.patch(`http://127.0.0.1:8000/updateDeletecategory/${id}/`, formData);
+    
+            if (response.status === 200) { // Axios uses the status property
+                toast.success("Category updated successfully");
+                setFormData({ category_name: '' });
+                setTimeout(() => {
+                    navigate('/medicineadmin/categorylist');
+                }, 3000);
+            } else {
+                toast.error("Update failed. Please try again");
             }
+        } catch (err) {
+            toast.error(`Update category failed: ${err.message}`);
         }
-        catch(err){
-            toast.error("Update Category Failed !!", err.message)
-        }
-    }
+    };
+    
 
   return (
        <>

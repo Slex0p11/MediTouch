@@ -28,3 +28,7 @@ class createCategory(generics.CreateAPIView):
 class updatedeleteCategory(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerialzier
+
+class MedicineDetail(generics.RetrieveAPIView):
+    queryset = medicine.objects.all()
+    serializer_class = medicineSerializer

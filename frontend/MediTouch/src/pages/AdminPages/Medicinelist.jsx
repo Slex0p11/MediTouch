@@ -87,11 +87,21 @@ const deleteContact = async(id) => {
                   {items.Category}
               </td>
               <td className="px-6 py-4">
-                    <Link to="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link> &nbsp; &nbsp;
-                    <Link to="#" className="font-medium text-blue-600 dark:text-red-500 hover:underline" 
-                    onClick = {()=> deleteContact(items.id)}
-                    >Delete</Link>
-              </td>
+  <Link
+    to={`/medicineadmin/editmedicine/${items.id}`}
+    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+  >
+    Edit
+  </Link>
+  &nbsp; &nbsp;
+  <Link
+    to="#"
+    className="font-medium text-blue-600 dark:text-red-500 hover:underline"
+    onClick={() => deleteContact(items.id)}
+  >
+    Delete
+  </Link>
+</td>
               
           </tr>
             ))}
