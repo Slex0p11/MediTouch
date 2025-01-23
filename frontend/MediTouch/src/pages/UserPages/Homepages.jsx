@@ -37,9 +37,11 @@ const Homepages = () => {
              </div>
  
              <div>
-               <h3 className="text-lg font-extrabold text-gray-800">{items.medicine_name}</h3>
-               <p className="text-gray-600 text-sm mt-2">{items.description}</p>
-               <h4 className="text-lg text-gray-800 font-bold mt-4">Rs. {items.price}</h4>
+              <h3 className="text-lg font-extrabold text-gray-800">{items.medicine_name}</h3>
+              <p className="text-gray-600 text-sm mt-2">{items.description}</p>
+              <h4 className="text-lg text-gray-800 font-bold mt-4">Rs. {items.price}</h4>
+              <button className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-300 transition duration-300" >Add to Cart</button>
+ 
              </div>
            </div>
  

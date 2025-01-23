@@ -66,14 +66,14 @@ const AddMedicine = () => {
     <>
       <ToastContainer theme="colored" position="top-center" />
       <section className="ml-60">
-        <div className="flex justify-between mb-5 -mt-80">
+        <div className="flex justify-between mb-1 -mt-80">
           <h2 className="text-2xl mx-3 font-bold">Add Medicine</h2>
           <h2 className="text-xl font-bold">
             Dashboard/ <span className="text-green-600">Add Medicine</span>
           </h2>
         </div>
         <form
-          className="space-y-6 px-4 max-w-sm mx-auto font-[sans-serif] shadow-lg shadow-blue-300"
+          className="space-y-6 px-4 max-w-sm  mx-auto  font-[sans-serif] shadow-lg shadow-blue-300"
           onSubmit={handleSubmit}
         >
           <div className="flex items-center">
