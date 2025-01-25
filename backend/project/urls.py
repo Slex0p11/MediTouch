@@ -19,15 +19,32 @@ from django.urls import path
 from app.views import*
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    #for user
     path('register/', RegisterUser.as_view(), name='register'),
+    path('login/', LoginUser.as_view(), name='login'),
     path('api/allmedicine', AllMedicine.as_view(), name='medicinelist'),
+
+    #for category
     path('api/category', AllCategory.as_view(), name='categorylist'),
     path('createcategory/', createCategory.as_view(), name='createCategory'),
     path('updateDeletecategory/<int:pk>/', updatedeleteCategory.as_view(), name='updateDeletecategory'),
+
+    #for medicine
     path('addmedicine/', AddMedicine.as_view(), name='addmedicine'),
     path('updateDeletemedicine/<int:pk>/', updateDeletemedicine.as_view(), name='updateDeletemedicine'),
-    path('medicine/<int:pk>/', MedicineDetail.as_view(), name='medicinedetail'),  # New route for details
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('medicine/<int:pk>/', MedicineDetail.as_view(), name='medicinedetail'),   
+
+    #for token
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+]   
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
