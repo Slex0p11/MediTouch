@@ -10,28 +10,33 @@ import Categorylist from './pages/AdminPages/Categorylist'
 import AddCategory from './pages/AdminPages/AddCategory'
 import EditCategory from './pages/AdminPages/EditCategory'
 import EditMedicine from './pages/AdminPages/EditMedicine'
+import Login from './pages/UserPages/Login'
+import Register from './pages/UserPages/Register'
 
 const Myroutes = () => {
   return (
     <>
       <Router>
         <Routes>
-            <Route path='/' element={<Layout/>}>
-                <Route index element={<Homepages/>}/>
+          {/* Public Routes */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Homepages />} />
+          </Route>
 
-            
-            </Route>
-            <Route path='/medicineadmin/' element={<AdminLayout/>}>
-                <Route index element={<Dashboard/>}/>
+          {/* Authentication Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-                <Route path='medicinelist' element={<Medicinelist/>}/>
-                <Route path='addmedicine' element={<AddMedicine/>}/>
-                <Route path='editmedicine/:id' element={<EditMedicine/>}/>
-
-                <Route path='categorylist' element={<Categorylist/>}/>
-                <Route path='addcategory' element={<AddCategory/>}/>
-                <Route path='editcategory/:id' element={<EditCategory/>}/>
-            </Route>
+          {/* Admin Routes */}
+          <Route path="/medicineadmin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="medicinelist" element={<Medicinelist />} />
+            <Route path="addmedicine" element={<AddMedicine />} />
+            <Route path="editmedicine/:id" element={<EditMedicine />} />
+            <Route path="categorylist" element={<Categorylist />} />
+            <Route path="addcategory" element={<AddCategory />} />
+            <Route path="editcategory/:id" element={<EditCategory />} />
+          </Route>
         </Routes>
       </Router>
     </>
