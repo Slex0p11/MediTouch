@@ -12,6 +12,8 @@ import EditCategory from './pages/AdminPages/EditCategory'
 import EditMedicine from './pages/AdminPages/EditMedicine'
 import Login from './pages/UserPages/Login'
 import Register from './pages/UserPages/Register'
+import Product from './pages/UserPages/Product'
+
 
 const Myroutes = () => {
   return (
@@ -26,6 +28,9 @@ const Myroutes = () => {
           {/* Authentication Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/product/:id" element={<Product />} />
+          
+
 
           {/* Admin Routes */}
           <Route path="/medicineadmin" element={<AdminLayout />}>
@@ -36,6 +41,7 @@ const Myroutes = () => {
             <Route path="categorylist" element={<Categorylist />} />
             <Route path="addcategory" element={<AddCategory />} />
             <Route path="editcategory/:id" element={<EditCategory />} />
+
           </Route>
         </Routes>
       </Router>
