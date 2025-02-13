@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";  // Using useNavigate for redirection
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
-  const navigate = useNavigate();  // Initialize useNavigate hook
+  const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState("User"); // Default to User
 
   const handleLogin = async (data) => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/login/", {
-        email: data.email, 
+        email: data.email,
         password: data.password,
       });
 
@@ -22,14 +23,19 @@ const Login = () => {
         localStorage.setItem("accessToken", response.data.accesstoken);
         localStorage.setItem("refreshToken", response.data.refreshtoken);
         localStorage.setItem("userEmail", response.data.email);
-        localStorage.setItem("userRole", response.data.role);
+        localStorage.setItem("userRole", selectedRole);
 
-        // Redirect to a page after login
-        navigate("/#");  // Redirect user to dashboard or home page
+        // Redirect based on user role
+        if (selectedRole === "Admin") {
+          navigate("/medicineadmin/dashboard");
+        } else {
+          navigate("/#");
+        }
+
         reset();
       }
     } catch (error) {
-      console.error(error.response.data);
+      console.error(error.response?.data || "Login error");
       alert("Invalid login credentials.");
     }
   };
@@ -38,7 +44,7 @@ const Login = () => {
     <div className="bg-gray-50 font-[sans-serif]">
       <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
         <div className="max-w-md w-full">
-          <a href="javascript:void(0)">
+          <a href="#">
             <img
               src="https://i.imgur.com/Pul2AD6.png"
               alt="logo"
@@ -49,52 +55,42 @@ const Login = () => {
           <div className="p-8 rounded-2xl bg-white shadow">
             <h2 className="text-gray-800 text-center text-2xl font-bold">Sign in</h2>
             <form className="mt-8 space-y-4" onSubmit={handleSubmit(handleLogin)}>
+              
+              {/* Email Input */}
               <div>
                 <label className="text-gray-800 text-sm mb-2 block">Email</label>
-                <div className="relative flex items-center">
-                  <input
-                    name="email"
-                    type="text"
-                    {...register("email", { required: true })}
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    placeholder="Enter email"
-                  />
-                </div>
+                <input
+                  name="email"
+                  type="text"
+                  {...register("email", { required: true })}
+                  className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                  placeholder="Enter email"
+                />
               </div>
 
+              {/* Password Input */}
               <div>
                 <label className="text-gray-800 text-sm mb-2 block">Password</label>
-                <div className="relative flex items-center">
-                  <input
-                    name="password"
-                    type="password"
-                    {...register("password", { required: true })}
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    placeholder="Enter password"
-                  />
-                </div>
+                <input
+                  name="password"
+                  type="password"
+                  {...register("password", { required: true })}
+                  className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                  placeholder="Enter password"
+                />
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-800">
-                    Remember me
-                  </label>
-                </div>
-                <div className="text-sm">
-                  <a
-                    href="javascript:void(0);"
-                    className="text-blue-600 hover:underline font-semibold"
-                  >
-                    
-                  </a>
-                </div>
+              {/* Role Selection Dropdown */}
+              <div>
+                <label className="text-gray-800 text-sm mb-2 block">Select Role</label>
+                <select
+                  className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                >
+                  <option value="User">User</option>
+                  <option value="Admin">Admin</option>
+                </select>
               </div>
 
               <div className="!mt-8">
@@ -105,12 +101,12 @@ const Login = () => {
                   Sign in
                 </button>
               </div>
+
               <p className="text-gray-800 text-sm !mt-8 text-center">
                 Don't have an account?{" "}
-                {/* Use a Link to navigate to the Register page */}
                 <span
                   className="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold cursor-pointer"
-                  onClick={() => navigate("/register")}  // Using navigate to redirect to Register page
+                  onClick={() => navigate("/register")}
                 >
                   Register here
                 </span>

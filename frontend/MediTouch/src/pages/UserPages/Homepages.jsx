@@ -58,7 +58,7 @@ const Homepages = () => {
                     className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-300 transition duration-300"
                     onClick={() => handleAddToCart(item.id)}
                   >
-                    Add to Cart
+                    View Detail
                   </button>
                 </div>
               </div>

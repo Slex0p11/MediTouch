@@ -34,3 +34,8 @@ class medicineSerializer(ModelSerializer):
     class Meta:
         model = medicine
         fields = "__all__"
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'first_name', 'last_name', 'dob',]  

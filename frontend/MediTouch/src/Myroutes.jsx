@@ -34,7 +34,7 @@ const Myroutes = () => {
 
           {/* Admin Routes */}
           <Route path="/medicineadmin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="medicinelist" element={<Medicinelist />} />
             <Route path="addmedicine" element={<AddMedicine />} />
             <Route path="editmedicine/:id" element={<EditMedicine />} />

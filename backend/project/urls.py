@@ -26,25 +26,39 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/users/', UserListView.as_view(), name='user-list'),
+    path('api/users/<str:username>/', UserDeleteView.as_view(), name='delete-user'),
+    
+    
 
-    #for user
+    # User Authentication
     path('register/', RegisterUser.as_view(), name='register'),
     path('login/', LoginUser.as_view(), name='login'),
-    path('api/allmedicine', AllMedicine.as_view(), name='medicinelist'),
+    
 
-    #for category
-    path('api/category', AllCategory.as_view(), name='categorylist'),
-    path('createcategory/', createCategory.as_view(), name='createCategory'),
-    path('updateDeletecategory/<int:pk>/', updatedeleteCategory.as_view(), name='updateDeletecategory'),
-
-    #for medicine
+    # Medicine APIs
+    path('api/allmedicine/', AllMedicine.as_view(), name='medicinelist'),
     path('addmedicine/', AddMedicine.as_view(), name='addmedicine'),
     path('updateDeletemedicine/<int:pk>/', updateDeletemedicine.as_view(), name='updateDeletemedicine'),
     path('medicine/<int:pk>/', MedicineDetail.as_view(), name='medicinedetail'),   
 
-    #for token
+    # Category APIs
+    path('api/category/', AllCategory.as_view(), name='categorylist'),
+    path('createcategory/', createCategory.as_view(), name='createCategory'),
+    path('updateDeletecategory/<int:pk>/', updatedeleteCategory.as_view(), name='updateDeletecategory'),
+
+    # Count APIs
+    path('api/medicines/count/', MedicineCount.as_view(), name='medicine-count'),
+    path('api/categories/count/', CategoryCount.as_view(), name='category-count'),
+    path('api/users/count/', UserCount.as_view(), name='user-count'),
+    path('api/dashboard-stats/', DashboardStats.as_view(), name='dashboard-stats'),
+
+
+    # Token Authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-]   
+]
+
+# Serve media files in development mode
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
