@@ -13,6 +13,7 @@ import EditMedicine from './pages/AdminPages/EditMedicine'
 import Login from './pages/UserPages/Login'
 import Register from './pages/UserPages/Register'
 import Product from './pages/UserPages/Product'
+import Order from './pages/UserPages/Order'
 
 
 const Myroutes = () => {
@@ -29,6 +30,7 @@ const Myroutes = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/product/:id" element={<Product />} />
+          <Route path="/order" element={<Order />} />
           
 
 
@@ -41,6 +43,8 @@ const Myroutes = () => {
             <Route path="categorylist" element={<Categorylist />} />
             <Route path="addcategory" element={<AddCategory />} />
             <Route path="editcategory/:id" element={<EditCategory />} />
+
+          
 
           </Route>
         </Routes>
