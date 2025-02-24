@@ -40,7 +40,7 @@ class AllMedicine(generics.ListAPIView):
 class AddMedicine(generics.CreateAPIView):
     queryset = medicine.objects.all()
     serializer_class = medicineSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    # permission_classes = [IsAuthenticated, IsAdminUser]
 
 class updateDeletemedicine(generics.RetrieveUpdateDestroyAPIView):
     queryset = medicine.objects.all()

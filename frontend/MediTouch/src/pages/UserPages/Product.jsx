@@ -26,14 +26,6 @@ const Product = () => {
       });
   }, [id]);
 
-  const increaseQuantity = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
-  };
-
-  const decreaseQuantity = () => {
-    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
-  };
-
   const handleBuyNow = () => {
     navigate("/order", {
       state: {
@@ -69,11 +61,7 @@ const Product = () => {
               <div className="flex items-center gap-4 mt-6">
                 <p className="text-gray-800 text-2xl font-bold">Total Price: Rs. {product.price * quantity}</p>
               </div>
-              <div className="flex items-center gap-4 mt-4">
-                <button onClick={decreaseQuantity} className="px-3 py-1 bg-black-300 hover:bg-gray-400 rounded">-</button>
-                <span className="text-lg font-semibold text-black bg-gray-300 px-3 py-1 rounded">{quantity}</span>
-                <button onClick={increaseQuantity} className="px-3 py-1 bg-black-300 hover:bg-gray-400 rounded">+</button>
-              </div>
+
               <div className="flex gap-4 mt-6 max-w-md">
                 <button
                   type="button"
@@ -97,4 +85,5 @@ const Product = () => {
     </>
   );
 };
+
 export default Product;
