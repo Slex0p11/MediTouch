@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', UserListView.as_view(), name='user-list'),
     path('api/users/<str:username>/', UserDeleteView.as_view(), name='delete-user'),
+    path('api/users/<str:username>/update/', UserUpdateView.as_view(), name='user-update'),
     
     
 

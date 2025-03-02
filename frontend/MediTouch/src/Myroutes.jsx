@@ -11,11 +11,11 @@ import AddCategory from './pages/AdminPages/AddCategory';
 import EditCategory from './pages/AdminPages/EditCategory';
 import EditMedicine from './pages/AdminPages/EditMedicine';
 import Login from './pages/UserPages/Login';
-import Register from './pages/UserPages/Register';
+ import Register from './pages/UserPages/Register';
 import Product from './pages/UserPages/Product';
 import Esewa from './pages/UserPages/Esewa';
 import PaymentSuccess from './pages/UserPages/PaymentSuccess';
-
+import AdminLogin from './pages/AdminPages/AdminLogin';
 
 const Myroutes = () => {
   return (
@@ -32,7 +32,10 @@ const Myroutes = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/order" element={<Esewa />} />
-          
+
+          {/* Admin Authentication Routes */}
+          <Route path="/adminlogin" element={<AdminLogin/>} />  
+
           {/* Admin Routes */}
           <Route path="/medicineadmin" element={<AdminLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
@@ -45,11 +48,11 @@ const Myroutes = () => {
           </Route>
 
           {/* Payment Success Route */}
-          <Route path="/paymentsuccess" element={<PaymentSuccess/>} />
+          <Route path="/paymentsuccess" element={<PaymentSuccess />} />
         </Routes>
       </Router>
     </>
   );
-}
+};
 
 export default Myroutes;

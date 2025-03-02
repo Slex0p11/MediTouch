@@ -46,7 +46,7 @@ const AddCategory = () => {
     <ToastContainer theme='colored' position='top-center'/>
     <section className="ml-60">
     <div className="flex justify-between mb-5 -mt-80">
-        <h2 className='text-2xl mx-3 font-bold'> Add Category</h2>
+        <h2 className='text-2xl mx-3 font-bold text-blue-600'> Add Category</h2>
         <h2 className='text-xl font-bold'>Dashboard/ <span className='text-green-600'>Add category</span></h2>
     </div>
       <form className="space-y-6 px-4 max-w-sm mx-auto font-[sans-serif] shadow-lg shadow-blue-300" onSubmit={onsubmit}>

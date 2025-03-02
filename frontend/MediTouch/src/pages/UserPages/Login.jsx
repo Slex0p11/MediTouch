@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState("User"); // Default to User
 
   const handleLogin = async (data) => {
     try {
@@ -23,14 +22,12 @@ const Login = () => {
         localStorage.setItem("accessToken", response.data.accesstoken);
         localStorage.setItem("refreshToken", response.data.refreshtoken);
         localStorage.setItem("userEmail", response.data.email);
-        localStorage.setItem("userRole", selectedRole);
+        
+        // Automatically set the user role as "User"
+        localStorage.setItem("userRole", "User");
 
-        // Redirect based on user role
-        if (selectedRole === "Admin") {
-          navigate("/medicineadmin/dashboard");
-        } else {
-          navigate("/#");
-        }
+        // Redirect to the user homepage
+        navigate("/#");
 
         reset();
       }
@@ -78,19 +75,6 @@ const Login = () => {
                   className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                   placeholder="Enter password"
                 />
-              </div>
-
-              {/* Role Selection Dropdown */}
-              <div>
-                <label className="text-gray-800 text-sm mb-2 block">Select Role</label>
-                <select
-                  className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                  value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value)}
-                >
-                  <option value="User">User</option>
-                  <option value="Admin">Admin</option>
-                </select>
               </div>
 
               <div className="!mt-8">

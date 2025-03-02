@@ -51,8 +51,6 @@ class updateDeletemedicine(generics.RetrieveUpdateDestroyAPIView):
 class AllCategory(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerialzier
-    
-    
 
 class createCategory(generics.CreateAPIView):
     queryset = Category.objects.all()
@@ -116,3 +114,20 @@ class UserDeleteView(APIView):
             return Response({"message": "User deleted successfully"}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UserUpdateView(APIView):
+     
+
+    def put(self, request, username, *args, **kwargs):
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Validate and update the user
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User updated successfully"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

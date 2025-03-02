@@ -99,7 +99,7 @@ const Esewa = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block">Number</label>
+          <label className="block">Phone Number</label>
           <input type="text" className="border rounded p-2 w-full" required />
         </div>
 
