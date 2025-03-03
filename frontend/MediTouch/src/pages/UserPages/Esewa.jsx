@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import CryptoJS from "crypto-js";
+import axios from "axios"; // Import axios for API call
 import "./Esewa.css";
 
 const Esewa = () => {
@@ -10,6 +11,8 @@ const Esewa = () => {
 
   const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [totalPrice, setTotalPrice] = useState(initialTotalPrice || 0);
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
 
   const pricePerUnit = product?.price || 0; // Assuming product has a price field
 
@@ -58,17 +61,42 @@ const Esewa = () => {
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
   const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
+  // Store order details in the backend
+  const handleOrderSubmission = async (event) => {
+    event.preventDefault(); // Prevent form from submitting immediately
+
+    if (!address || !phone) {
+      alert("Please enter your address and phone number.");
+      return;
+    }
+
+    const orderData = {
+      medicine_name: product.medicine_name,
+      quantity,
+      price: totalPrice,
+      address,
+      phone,
+      image: product.image,
+      status: "Pending",
+    };
+
+    try {
+      await axios.post("http://localhost:8000/api/orders/", orderData);
+      console.log("Order stored successfully in admin panel.");
+      event.target.submit(); // Now submit the form to eSewa
+    } catch (error) {
+      console.error("Error storing order:", error);
+      alert("Failed to place order. Please try again.");
+    }
+  };
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Checkout</h1>
 
       {product && (
         <div className="border p-4 rounded shadow-md mb-4">
-          {/* Display the product image */}
-          {product.image && (
-            <img src={product.image} alt={product.medicine_name} className="w-32 h-32 object-cover mb-4" />
-          )}
-
+          {product.image && <img src={product.image} alt={product.medicine_name} className="w-32 h-32 object-cover mb-4" />}
           <h2 className="text-xl font-semibold">{product.medicine_name}</h2>
           <p>Price per unit: Rs. {pricePerUnit}</p>
           <div className="flex items-center mt-2">
@@ -80,7 +108,7 @@ const Esewa = () => {
         </div>
       )}
 
-      <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+      <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST" onSubmit={handleOrderSubmission}>
         <input type="hidden" name="amount" value={formData.amount} required />
         <input type="hidden" name="tax_amount" value={formData.tax_amount} required />
         <input type="hidden" name="total_amount" value={formData.total_amount} required />
@@ -95,12 +123,12 @@ const Esewa = () => {
 
         <div className="mb-4">
           <label className="block">Address</label>
-          <input type="text" className="border rounded p-2 w-full" required />
+          <input type="text" className="border rounded p-2 w-full" value={address} onChange={(e) => setAddress(e.target.value)} required />
         </div>
 
         <div className="mb-4">
           <label className="block">Phone Number</label>
-          <input type="text" className="border rounded p-2 w-full" required />
+          <input type="text" className="border rounded p-2 w-full" value={phone} onChange={(e) => setPhone(e.target.value)} required />
         </div>
 
         <button type="submit" className="px-6 py-2 bg-green-600 text-white rounded">

@@ -29,7 +29,7 @@ urlpatterns = [
     path('api/users/', UserListView.as_view(), name='user-list'),
     path('api/users/<str:username>/', UserDeleteView.as_view(), name='delete-user'),
     path('api/users/<str:username>/update/', UserUpdateView.as_view(), name='user-update'),
-    
+     
     
 
     # User Authentication
@@ -41,7 +41,8 @@ urlpatterns = [
     path('api/allmedicine/', AllMedicine.as_view(), name='medicinelist'),
     path('addmedicine/', AddMedicine.as_view(), name='addmedicine'),
     path('updateDeletemedicine/<int:pk>/', updateDeletemedicine.as_view(), name='updateDeletemedicine'),
-    path('medicine/<int:pk>/', MedicineDetail.as_view(), name='medicinedetail'),   
+    path('medicine/<int:pk>/', MedicineDetail.as_view(), name='medicinedetail'),  
+    path('api/orders/', OrderListView.as_view(), name='order-list'),
 
     # Category APIs
     path('api/category/', AllCategory.as_view(), name='categorylist'),

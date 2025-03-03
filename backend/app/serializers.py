@@ -56,3 +56,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.dob = validated_data.get('dob', instance.dob)
         instance.save()
         return instance
+    
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = "__all__"

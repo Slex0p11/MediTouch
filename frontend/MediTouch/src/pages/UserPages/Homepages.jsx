@@ -10,7 +10,7 @@ const Homepages = () => {
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/allmedicine')
       .then(res => {
-        setData(res.data);
+        setData(res.data.slice(0, 4));  // Only keep the first 4 products
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);

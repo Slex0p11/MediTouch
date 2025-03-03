@@ -8,13 +8,15 @@ const Product = () => {
   const { id } = useParams(); // Get product ID from URL
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]); // State for related products
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
+    // Fetch the single product
     axios
-      .get(`http://127.0.0.1:8000/medicine/${id}`) // Fetch product details
+      .get(`http://127.0.0.1:8000/medicine/${id}`)
       .then((res) => {
         setProduct(res.data);
         setLoading(false);
@@ -24,6 +26,17 @@ const Product = () => {
         setError("Failed to load product details");
         setLoading(false);
       });
+
+    // Fetch related products (limit to 4)
+    axios
+      .get(`http://127.0.0.1:8000/medicine?limit=4`)
+      .then((res) => {
+        setRelatedProducts(res.data.slice(0, 4)); // Ensure only 4 products
+      })
+      .catch((error) => {
+        console.error("Error fetching related products:", error);
+      });
+
   }, [id]);
 
   const handleBuyNow = () => {
@@ -79,6 +92,8 @@ const Product = () => {
               </div>
             </div>
           </div>
+
+          
         </div>
       </div>
       <Footer />
