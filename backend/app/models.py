@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from project import settings
 
+
 User = settings.AUTH_USER_MODEL
 
 class CustomUser(AbstractUser):
@@ -51,8 +52,6 @@ class Order(models.Model):
     phone = models.CharField(max_length=15)
     image = models.URLField()
     status = models.CharField(max_length=50, default="Completed")
-    
 
     def __str__(self):
         return self.medicine_name
-

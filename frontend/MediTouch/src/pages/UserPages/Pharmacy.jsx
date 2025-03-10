@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Pharmacy = () => {
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     // Fetch all products (medicines) from your backend API
@@ -12,6 +15,11 @@ const Pharmacy = () => {
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);
+
+  const handleAddToCart = (id) => {
+    navigate(`/product/${id}`);
+  };
+
 
   return (
     <div className="font-[sans-serif] bg-gray-100">
@@ -45,11 +53,11 @@ const Pharmacy = () => {
                 
                 {/* Add to Cart Button */}
                 <button
-                  className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-300 transition duration-300"
-                  onClick={() => console.log(`Added ${item.medicine_name} to cart`)} // Add your cart logic here
-                >
-                   View Detail
-                </button>
+                    className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-300 transition duration-300"
+                    onClick={() => handleAddToCart(item.id)}
+                  >
+                    View Detail
+                  </button>
               </div>
             </div>
           ))}

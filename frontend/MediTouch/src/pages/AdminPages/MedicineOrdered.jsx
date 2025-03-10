@@ -24,49 +24,79 @@ const MedicineOrdered = () => {
     fetchOrders();
   }, []);
 
+  const deletePaymentOption = async (orderId) => {
+    if (window.confirm("Are you sure you want to delete this payment option?")) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/orders/${orderId}/delete/`, {
+          method: "DELETE",
+        });
+        if (!response.ok) {
+          throw new Error("Failed to delete payment option");
+        }
+        setOrders(orders.filter(order => order.id !== orderId));
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  };
+
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Medicine Orders</h1>
-      {loading && <p className="text-gray-600">Loading orders...</p>}
-      {error && <p className="text-red-500">Error: {error}</p>}
-      {!loading && !error && orders.length === 0 && <p className="text-gray-600">No orders found.</p>}
-      {!loading && !error && orders.length > 0 && (
-        <div className="overflow rounded-lg shadow-lg">
-          <table className="w-full table-auto border-collapse">
-            <thead className="bg-gray-800 text-white">
-              <tr>
-                <th className="px-4 py-3">Image</th>
-                <th className="px-4 py-3">Medicine Name</th>
-                <th className="px-4 py-3">Price</th>
-                <th className="px-4 py-3">Quantity</th>
-                <th className="px-4 py-3">Total Price</th>
-                <th className="px-4 py-3">Address</th>
-                <th className="px-4 py-3">Phone Number</th>
-                <th className="px-4 py-3">Status</th>
+    <div className="mx-auto p-4 max-w-screen-xl ml-60">
+    <h1 className="text-3xl font-semibold mb-6 text-gray-800">Medicine Orders</h1>
+    {loading && <p className="text-gray-600">Loading orders...</p>}
+    {error && <p className="text-red-500">Error: {error}</p>}
+    {!loading && !error && orders.length === 0 && <p className="text-gray-600">No orders found.</p>}
+    {!loading && !error && orders.length > 0 && (
+      <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-300">
+        <table className="w-full table-auto border-collapse">
+          <thead className="bg-blue-600 text-white">
+            <tr>
+              <th className="px-6 py-3 text-left">Image</th>
+              <th className="px-6 py-3 text-left min-w-[150px]">Medicine Name</th>
+              <th className="px-6 py-3 text-left">Price</th>
+              <th className="px-6 py-3 text-left">Quantity</th>
+              <th className="px-6 py-3 text-left">Total Price</th>
+              <th className="px-6 py-3 text-left">Address</th>
+              <th className="px-6 py-3 text-left">Phone Number</th>
+              <th className="px-6 py-3 text-left">Payment Status</th>
+              <th className="px-6 py-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {orders.map((order) => (
+              <tr key={order.id} className="hover:bg-gray-50 transition-all duration-200 ease-in-out">
+                <td className="px-6 py-4">
+                  <img
+                    src={order.image}
+                    alt={order.medicine_name}
+                    className="w-20 h-20 object-cover rounded-md shadow-sm"
+                  />
+                </td>
+                <td className="px-6 py-4 text-gray-700 min-w-[150px]">{order.medicine_name}</td>
+                <td className="px-6 py-4 text-gray-700">Rs. {order.price}</td>
+                <td className="px-6 py-4 text-gray-700">{order.quantity}</td>
+                <td className="px-6 py-4 text-gray-700">Rs. {(order.price * order.quantity).toFixed(2)}</td>
+                <td className="px-6 py-4 text-gray-700">{order.address}</td>
+                <td className="px-6 py-4 text-gray-700">{order.phone}</td>
+                <td className="px-6 py-4 font-semibold text-green-600">✅Completed
+                  {order.payment_status}
+                </td>
+                <td className="px-6 py-4">
+                  <button
+                    onClick={() => deletePaymentOption(order.id)}
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all duration-300 ease-in-out"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((order) => (
-                <tr key={order.transaction_id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-3">
-                    <img src={order.image} alt={order.medicine_name} className="w-20 h-20 object-cover rounded" />
-                  </td>
-                  <td className="px-4 py-3 text-gray-700">{order.medicine_name}</td>
-                  <td className="px-4 py-3 text-gray-700">Rs. {order.price}</td>
-                  <td className="px-4 py-3 text-gray-700">{order.quantity}</td>
-                  <td className="px-4 py-3 text-gray-700">Rs. {(order.price * order.quantity).toFixed(2)}</td>
-                  <td className="px-4 py-3 text-gray-700">{order.address}</td>
-                  <td className="px-4 py-3 text-gray-700">{order.phone}</td>
-                  <td className={`px-4 py-3 font-semibold ${order.status === "Pending" ? "text-green-600" : "text-green-600"}`}>
-                    {order.status === "Pending" ? "✅Completed" : order.status}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+  
   );
 };
 

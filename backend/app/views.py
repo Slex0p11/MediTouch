@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .models import medicine, Category, User
+from .models import medicine, Category, User, Order
 from .serializers import *
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
@@ -153,3 +153,13 @@ class OrderListView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class OrderDeleteView(APIView):
+    def delete(self, request, order_id):
+        try:
+            order = Order.objects.get(id=order_id)
+            order.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Order.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)

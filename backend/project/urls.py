@@ -43,6 +43,7 @@ urlpatterns = [
     path('updateDeletemedicine/<int:pk>/', updateDeletemedicine.as_view(), name='updateDeletemedicine'),
     path('medicine/<int:pk>/', MedicineDetail.as_view(), name='medicinedetail'),  
     path('api/orders/', OrderListView.as_view(), name='order-list'),
+    path('api/orders/<int:order_id>/delete/', OrderDeleteView.as_view(), name='delete_order'),
 
     # Category APIs
     path('api/category/', AllCategory.as_view(), name='categorylist'),
