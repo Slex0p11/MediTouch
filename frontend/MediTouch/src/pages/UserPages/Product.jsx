@@ -5,16 +5,17 @@ import Header from "../../components/UserComponents/Header";
 import Footer from "../../components/UserComponents/Footer";
 
 const Product = () => {
-  const { id } = useParams(); // Get product ID from URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [relatedProducts, setRelatedProducts] = useState([]); // State for related products
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [prescriptionUploaded, setPrescriptionUploaded] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    // Fetch the single product
     axios
       .get(`http://127.0.0.1:8000/medicine/${id}`)
       .then((res) => {
@@ -27,19 +28,30 @@ const Product = () => {
         setLoading(false);
       });
 
-    // Fetch related products (limit to 4)
     axios
       .get(`http://127.0.0.1:8000/medicine?limit=4`)
       .then((res) => {
-        setRelatedProducts(res.data.slice(0, 4)); // Ensure only 4 products
+        setRelatedProducts(res.data.slice(0, 4));
       })
       .catch((error) => {
         console.error("Error fetching related products:", error);
       });
-
   }, [id]);
 
+  // Handle prescription file upload
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      setPrescriptionUploaded(true);
+      setErrorMsg(""); // Clear error when file is uploaded
+    }
+  };
+
   const handleBuyNow = () => {
+    if (!prescriptionUploaded) {
+      setErrorMsg("Please upload a prescription before proceeding.");
+      return;
+    }
+
     navigate("/order", {
       state: {
         product,
@@ -75,6 +87,21 @@ const Product = () => {
                 <p className="text-gray-800 text-2xl font-bold">Total Price: Rs. {product.price * quantity}</p>
               </div>
 
+              {/* Prescription Upload */}
+              <div className="mt-4">
+                <label className="block font-medium text-gray-700">Upload Prescription (PDF Only)</label>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleFileChange}
+                  className="mt-2 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200"
+                />
+                {errorMsg && <p className="text-red-600 text-sm mt-2">{errorMsg}</p>}
+                {prescriptionUploaded && (
+                  <p className="text-green-600 text-sm mt-2">Prescription uploaded successfully.</p>
+                )}
+              </div>
+
               <div className="flex gap-4 mt-6 max-w-md">
                 <button
                   type="button"
@@ -92,8 +119,6 @@ const Product = () => {
               </div>
             </div>
           </div>
-
-          
         </div>
       </div>
       <Footer />

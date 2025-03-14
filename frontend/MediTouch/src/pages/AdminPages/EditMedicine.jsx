@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
 const EditMedicine = () => {
-  const { id } = useParams(); // Get the medicine ID from the URL
+  const { id } = useParams();  
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

@@ -44,6 +44,7 @@ urlpatterns = [
     path('medicine/<int:pk>/', MedicineDetail.as_view(), name='medicinedetail'),  
     path('api/orders/', OrderListView.as_view(), name='order-list'),
     path('api/orders/<int:order_id>/delete/', OrderDeleteView.as_view(), name='delete_order'),
+    path("order/", OrderCreateView.as_view(), name="create_order"),
 
     # Category APIs
     path('api/category/', AllCategory.as_view(), name='categorylist'),

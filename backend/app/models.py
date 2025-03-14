@@ -52,6 +52,7 @@ class Order(models.Model):
     phone = models.CharField(max_length=15)
     image = models.URLField()
     status = models.CharField(max_length=50, default="Completed")
-
+    prescription = models.FileField(upload_to="prescriptions/", null=True, blank=False)
+     
     def __str__(self):
         return self.medicine_name

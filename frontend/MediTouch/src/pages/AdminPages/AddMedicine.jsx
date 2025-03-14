@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,12 +13,40 @@ const AddMedicine = () => {
     Category: '',
   });
 
+  const [categories, setCategories] = useState([]);
+  const [errors, setErrors] = useState({
+    medicine_name: false,
+    price: false,
+    Category: false,
+    description: false,
+  });
+
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/category/');
+        setCategories(response.data); // Assuming response.data is an array of categories
+      } catch (error) {
+        toast.error('Failed to fetch categories');
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+
+    // Reset error state for the specific field
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: value ? false : true,
     }));
   };
 
@@ -33,6 +61,44 @@ const AddMedicine = () => {
   // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!formData.medicine_name) {
+      newErrors.medicine_name = true;
+      toast.error('Medicine name cannot be empty!');
+      isValid = false;
+    }
+
+    if (formData.price <= 0) {
+      newErrors.price = true;
+      toast.error('Price must be greater than zero.');
+      isValid = false;
+    } else if (!formData.price) {
+      newErrors.price = true;
+      toast.error('Price cannot be empty!');
+      isValid = false;
+    }
+
+    if (!formData.Category) {
+      newErrors.Category = true;
+      toast.error('Category cannot be empty!');
+      isValid = false;
+    }
+
+    if (!formData.description) {
+      newErrors.description = true;
+      toast.error('Description cannot be empty!');
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+
+    if (!isValid) {
+      return;
+    }
+
     const form = new FormData();
     for (const key in formData) {
       form.append(key, formData[key]);
@@ -65,7 +131,7 @@ const AddMedicine = () => {
   return (
     <>
       <ToastContainer theme="colored" position="top-center" />
-      <section className="ml-60 mt-1"> {/* Added mt-20 to shift the form down */}
+      <section className="ml-60 mt-1">
         <div className="flex justify-between mb-6">
           <h2 className="text-2xl mx-3 font-bold text-blue-600">Add Medicine</h2>
           <h2 className="text-xl font-bold">
@@ -86,7 +152,7 @@ const AddMedicine = () => {
                 placeholder="Enter the name"
                 onChange={handleChange}
                 value={formData.medicine_name}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className={`px-4 py-2 border ${errors.medicine_name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
               />
             </div>
 
@@ -99,21 +165,26 @@ const AddMedicine = () => {
                 placeholder="Enter the Price"
                 onChange={handleChange}
                 value={formData.price}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className={`px-4 py-2 border ${errors.price ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
               />
             </div>
 
-            {/* Category */}
+            {/* Category Dropdown */}
             <div className="flex flex-col">
               <label className="text-gray-600 text-sm font-medium mb-1">Category</label>
-              <input
-                type="text"
+              <select
                 name="Category"
-                placeholder="Enter the category"
                 onChange={handleChange}
                 value={formData.Category}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+                className={`px-4 py-2 border ${errors.Category ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+              >
+                <option value="">Select a category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.category_name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Description */}
@@ -124,7 +195,7 @@ const AddMedicine = () => {
                 placeholder="Enter the Description"
                 onChange={handleChange}
                 value={formData.description}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className={`px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none`}
                 rows="4"
               ></textarea>
             </div>
@@ -136,7 +207,7 @@ const AddMedicine = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-1 file:px-4 file:rounded file:border-none file:bg-gray-200 file:text-sm file:text-gray-700"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>

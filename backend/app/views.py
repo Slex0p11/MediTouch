@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 
@@ -48,7 +49,7 @@ class AddMedicine(generics.CreateAPIView):
 class updateDeletemedicine(generics.RetrieveUpdateDestroyAPIView):
     queryset = medicine.objects.all()
     serializer_class = medicineSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+     
 
 # Category Views
 class AllCategory(generics.ListAPIView):
@@ -63,7 +64,7 @@ class createCategory(generics.CreateAPIView):
 class updatedeleteCategory(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerialzier
-    permission_classes = [IsAuthenticated, IsAdminUser]
+     
 
 class MedicineDetail(generics.RetrieveAPIView):
     queryset = medicine.objects.all()
@@ -163,3 +164,17 @@ class OrderDeleteView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Order.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+class OrderCreateView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        file = request.FILES.get("prescription")
+        if not file:
+            return Response({"error": "Prescription is required"}, status=400)
+        
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(prescription=file)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
