@@ -8,7 +8,6 @@ const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -27,21 +26,12 @@ const Product = () => {
         setError("Failed to load product details");
         setLoading(false);
       });
-
-    axios
-      .get(`http://127.0.0.1:8000/medicine?limit=4`)
-      .then((res) => {
-        setRelatedProducts(res.data.slice(0, 4));
-      })
-      .catch((error) => {
-        console.error("Error fetching related products:", error);
-      });
   }, [id]);
 
-  // Handle prescription file upload
   const handleFileChange = (e) => {
     if (e.target.files.length > 0) {
       setPrescriptionUploaded(true);
+      localStorage.setItem("prescription", e.target.files[0].name); // Save the file name in localStorage
       setErrorMsg(""); // Clear error when file is uploaded
     }
   };

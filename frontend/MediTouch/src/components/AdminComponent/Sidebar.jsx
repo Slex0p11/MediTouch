@@ -5,7 +5,7 @@ const Sidebar = () => {
   return (
     <>
       <nav className="bg-[#F5F5DC] shadow-lg h-screen fixed top-0 left-0 min-w-[250px] py-6 px-4 font-[sans-serif] overflow-auto">
-        <Link to="javascript:void(0)">
+        <Link to="">
           <img
             src="https://i.imgur.com/Pul2AD6.png"
             alt="logo"
@@ -155,7 +155,7 @@ const Sidebar = () => {
           <ul className="mt-3">
             <li>
               <Link
-                to="javascript:void(0)"
+                to=""
                 className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
               >
                 <svg
@@ -174,7 +174,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="javascript:void(0)"
+                to=""
                 className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
               >
                 <svg

@@ -18,44 +18,46 @@ import PaymentSuccess from "./pages/UserPages/PaymentSuccess";
 import AdminLogin from "./pages/AdminPages/AdminLogin";
 import Pharmacy from "./pages/UserPages/Pharmacy";
 import MedicineOrdered from "./pages/AdminPages/MedicineOrdered";
+import PrescriptionViewer from "./pages/AdminPages/PrescriptionViewer";
 
 const Myroutes = () => {
   return (
-    <>
-      <Router>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Homepages />} />
-            <Route path="/pharmacy" element={<Pharmacy />} />
-          </Route>
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Homepages />} />
+          <Route path="/pharmacy" element={<Pharmacy />} />
+        </Route>
 
-          {/* Authentication Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/product/:id" element={<Product />} />
-          <Route path="/order" element={<Esewa />} />
+        {/* Authentication Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/product/:id" element={<Product />} />
+        <Route path="/order" element={<Esewa />} />
 
-          {/* Admin Authentication Routes */}
-          <Route path="/adminlogin" element={<AdminLogin />} />
-          {/* Admin Routes */}
-          <Route path="/medicineadmin" element={<AdminLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="medicinelist" element={<Medicinelist />} />
-            <Route path="addmedicine" element={<AddMedicine />} />
-            <Route path="editmedicine/:id" element={<EditMedicine />} />
-            <Route path="categorylist" element={<Categorylist />} />
-            <Route path="addcategory" element={<AddCategory />} />
-            <Route path="editcategory/:id" element={<EditCategory />} />
-            <Route path="medicineorders" element={<MedicineOrdered />} /> 
-             
-          </Route>
+        {/* Admin Authentication Routes */}
+        <Route path="/adminlogin" element={<AdminLogin />} />
 
-          {/* Payment Success Route */}
-          <Route path="/paymentsuccess" element={<PaymentSuccess />} />
-        </Routes>
-      </Router>
-    </>
+        {/* Admin Routes */}
+        <Route path="/medicineadmin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="medicinelist" element={<Medicinelist />} />
+          <Route path="addmedicine" element={<AddMedicine />} />
+          <Route path="editmedicine/:id" element={<EditMedicine />} />
+          <Route path="categorylist" element={<Categorylist />} />
+          <Route path="addcategory" element={<AddCategory />} />
+          <Route path="editcategory/:id" element={<EditCategory />} />
+          <Route path="medicineorders" element={<MedicineOrdered />} />
+          
+          {/* Updated dynamic route for Prescription Viewer */}
+          <Route path="prescriptions/:fileName" element={<PrescriptionViewer />} />
+        </Route>
+
+        {/* Payment Success Route */}
+        <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+      </Routes>
+    </Router>
   );
 };
 
