@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import CryptoJS from "crypto-js";
-import axios from "axios"; // Import axios for API call
+import axios from "axios";
 import "./Esewa.css";
 
 const Esewa = () => {
@@ -13,8 +13,9 @@ const Esewa = () => {
   const [totalPrice, setTotalPrice] = useState(initialTotalPrice || 0);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [prescription, setPrescription] = useState(null);
 
-  const pricePerUnit = product?.price || 0; // Assuming product has a price field
+  const pricePerUnit = product?.price || 0;
 
   const [formData, setFormData] = useState({
     amount: totalPrice.toString(),
@@ -38,7 +39,6 @@ const Esewa = () => {
     return CryptoJS.enc.Base64.stringify(hash);
   };
 
-  // Update total price when quantity changes
   useEffect(() => {
     const newTotal = quantity * pricePerUnit;
     setTotalPrice(newTotal);
@@ -50,38 +50,47 @@ const Esewa = () => {
     }));
   }, [quantity, pricePerUnit]);
 
-  // Update signature when total amount changes
   useEffect(() => {
     const { total_amount, transaction_uuid, product_code, secret } = formData;
     const hashedSignature = generateSignature(total_amount, transaction_uuid, product_code, secret);
     setFormData((prev) => ({ ...prev, signature: hashedSignature }));
   }, [formData.total_amount]);
 
-  // Handle quantity change
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
   const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
-  // Store order details in the backend
+  // Handle file change
+  const handleFileChange = (e) => {
+    setPrescription(e.target.files[0]);
+  };
+
   const handleOrderSubmission = async (event) => {
-    event.preventDefault(); // Prevent form from submitting immediately
+    event.preventDefault();
 
     if (!address || !phone) {
       alert("Please enter your address and phone number.");
       return;
     }
 
-    const orderData = {
-      medicine_name: product.medicine_name,
-      quantity,
-      price: totalPrice,
-      address,
-      phone,
-      image: product.image,
-      status: "Pending",
-    };
+    if (!prescription) {
+      alert("Please upload a prescription before proceeding.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("medicine_name", product.medicine_name);
+    formData.append("quantity", quantity);
+    formData.append("price", totalPrice);
+    formData.append("address", address);
+    formData.append("phone", phone);
+    formData.append("image", product.image);
+    formData.append("status", "Pending");
+    formData.append("prescription", prescription);
 
     try {
-      await axios.post("http://localhost:8000/api/orders/", orderData);
+      await axios.post("http://localhost:8000/api/orders/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       console.log("Order stored successfully in admin panel.");
       event.target.submit(); // Now submit the form to eSewa
     } catch (error) {
@@ -108,7 +117,7 @@ const Esewa = () => {
         </div>
       )}
 
-      <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST" onSubmit={handleOrderSubmission}>
+      <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST" onSubmit={handleOrderSubmission} encType="multipart/form-data">
         <input type="hidden" name="amount" value={formData.amount} required />
         <input type="hidden" name="tax_amount" value={formData.tax_amount} required />
         <input type="hidden" name="total_amount" value={formData.total_amount} required />
@@ -129,6 +138,11 @@ const Esewa = () => {
         <div className="mb-4">
           <label className="block">Phone Number</label>
           <input type="text" className="border rounded p-2 w-full" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+        </div>
+
+        <div className="mb-4">
+          <label className="block">Upload Prescription</label>
+          <input type="file" className="border rounded p-2 w-full" onChange={handleFileChange} accept=".jpg,.png,.pdf" required />
         </div>
 
         <button type="submit" className="px-6 py-2 bg-green-600 text-white rounded">

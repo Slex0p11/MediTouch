@@ -71,7 +71,7 @@ const MedicineList = () => {
                 <td className="px-6 py-4">{items.description}</td>
                 <td className="px-6 py-4">Rs. {items.price}</td>
                 <td className="px-6 py-4">
-                  {getCategoryName(items.Category)}
+                  {getCategoryName(items.category)} {/* Updated from 'Category' to 'category' */}
                 </td>
                 <td className="px-6 py-4">
                   <Link to={`/medicineadmin/editmedicine/${items.id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">

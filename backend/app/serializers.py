@@ -23,17 +23,21 @@ class RegisterSerilaizer(serializers.ModelSerializer):
         )
         return user
 
+
 # Category Serializer
 class CategorySerialzier(ModelSerializer):
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = ['id', 'category_name'] 
 
 # Medicine Serializer
-class medicineSerializer(ModelSerializer):
+class medicineSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.category_name', read_only=True)  # Fetch category_name from related Category model
+
     class Meta:
         model = medicine
-        fields = "__all__"
+        fields = ['id','category','medicine_name','category_name', 'price','description','image','created_at','updated_at']
+
 
 # User Serializer for Listing Users (Display)
 class UserSerializer(serializers.ModelSerializer):

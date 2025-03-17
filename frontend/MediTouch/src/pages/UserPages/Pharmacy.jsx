@@ -1,27 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Pharmacy = () => {
   const [data, setData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/allmedicine')
-      .then(res => {
+    // Fetch medicines
+    axios
+      .get("http://127.0.0.1:8000/api/allmedicine")
+      .then((res) => {
         setData(res.data);
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch((error) => console.error("Error fetching medicines:", error));
+
+    // Fetch categories and sort them by category_name
+    axios
+      .get("http://127.0.0.1:8000/api/category/")
+      .then((res) => {
+        // Sort categories by category_name and add "All" as the first option
+        const sortedCategories = [
+          { id: 0, category_name: "All" },
+          ...res.data.sort((a, b) => a.category_name.localeCompare(b.category_name)),
+        ];
+        setCategories(sortedCategories);
+      })
+      .catch((error) => console.error("Error fetching categories:", error));
   }, []);
 
   const handleAddToCart = (id) => {
     navigate(`/product/${id}`);
   };
 
-  // Filter medicines based on search query
-  const filteredData = data.filter(item =>
-    item.medicine_name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter medicines based on search query and selected category
+  const filteredData = data.filter(
+    (item) =>
+      item.medicine_name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (selectedCategory === "All" || item.category_name === selectedCategory)  // Fixed to use category_name from medicine data
   );
 
   return (
@@ -29,14 +48,30 @@ const Pharmacy = () => {
       <div className="p-4 mx-auto lg:max-w-7xl sm:max-w-full flex-grow">
         <h2 className="text-4xl font-extrabold text-gray-800 mb-6">All Medicines</h2>
 
-        {/* Search Bar */}
-        <input
-          type="text"
-          placeholder="Search for medicines..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full p-2 mb-6 border border-gray-300 rounded-lg shadow-sm"
-        />
+        {/* Search and Category Filter Row */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+          {/* Search Bar */}
+          <input
+            type="text"
+            placeholder="Search for medicines..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full sm:w-2/3 p-2 border border-gray-300 rounded-lg shadow-sm"
+          />
+
+          {/* Category Dropdown */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full sm:w-1/3 p-2 border border-gray-300 rounded-lg shadow-sm bg-white"
+          >
+            {categories.map((category) => (
+              <option key={category.id} value={category.category_name}>
+                {category.category_name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {filteredData.length === 0 ? (
           <p className="text-center text-gray-600 text-lg">No medicines found.</p>
@@ -54,7 +89,7 @@ const Pharmacy = () => {
                   <h3 className="text-lg font-extrabold text-gray-800">{item.medicine_name}</h3>
                   <p className="text-gray-600 text-sm mt-2">{item.description}</p>
                   <h4 className="text-lg text-gray-800 font-bold mt-4">Rs. {item.price}</h4>
-                  
+
                   {/* View Detail Button */}
                   <button
                     className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-300 transition duration-300"

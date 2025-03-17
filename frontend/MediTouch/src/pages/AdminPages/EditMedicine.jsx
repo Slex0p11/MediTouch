@@ -7,6 +7,7 @@ const EditMedicine = () => {
   const { id } = useParams();  
   const navigate = useNavigate();
 
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     medicine_name: '',
     price: '',
@@ -16,11 +17,16 @@ const EditMedicine = () => {
   });
 
   useEffect(() => {
+    // Fetch categories from backend
+    axios.get('http://127.0.0.1:8000/api/category/')
+      .then(response => setCategories(response.data))
+      .catch(error => console.error('Error fetching categories:', error));
+
+    // Fetch existing medicine data
     const fetchMedicine = async () => {
       try {
         const res = await axios.get(`http://127.0.0.1:8000/medicine/${id}/`);
-
-        setFormData(res.data); // Set form data with fetched medicine data
+        setFormData(res.data);
       } catch (err) {
         console.log(err.message);
       }
@@ -30,9 +36,9 @@ const EditMedicine = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
+    setFormData(prevState => ({
+        ...prevState,
+        [name]: value
     }));
   };
 
@@ -129,18 +135,21 @@ const EditMedicine = () => {
             />
           </div>
 
-          <div className="flex items-center">
-            <label className="text-gray-400 w-36 text-sm" htmlFor="Category">
-              Category
-            </label>
-            <input
-              type="text"
+          <div>
+            <label>Category:</label>
+            <select
               name="Category"
-              placeholder="Enter Category"
-              onChange={handleChange}
               value={formData.Category}
-              className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black"
-            />
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.category_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex items-center">

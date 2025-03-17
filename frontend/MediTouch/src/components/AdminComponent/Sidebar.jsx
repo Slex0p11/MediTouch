@@ -174,7 +174,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to=""
+                to="/adminlogin"
                 className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
               >
                 <svg

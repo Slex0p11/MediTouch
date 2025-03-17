@@ -34,14 +34,14 @@ class medicine(models.Model):
     medicine_name = models.CharField(max_length=200)
     price = models.FloatField()
     description = models.TextField()
-    image = models.FileField(upload_to='medicineimg/',null=True, blank=True)
-    Category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
-    created_at = models.DateTimeField(auto_now_add=True) 
+    image = models.FileField(upload_to='medicineimg/', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-
-
+    
     def __str__(self):
         return self.medicine_name
+
     
 
 class Order(models.Model):
@@ -52,7 +52,7 @@ class Order(models.Model):
     phone = models.CharField(max_length=15)
     image = models.URLField()
     status = models.CharField(max_length=50, default="Completed")
-    prescription = models.FileField(upload_to="prescriptions/", null=True, blank=False)
-     
+    prescription = models.ImageField(upload_to="prescriptions/", null=False, blank=False)  # Ensure prescription is required
+
     def __str__(self):
         return self.medicine_name

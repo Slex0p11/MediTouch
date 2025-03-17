@@ -4,90 +4,84 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AddMedicine = () => {
-  const [formData, setFormData] = useState({
-    id: '',
+  const [categories, setCategories] = useState([]);
+  const [product, setProduct] = useState({
     medicine_name: '',
     price: '',
-    description: '',
+    category: '',
     image: null,
-    Category: '',
+    description: '',
   });
 
-  const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({
     medicine_name: false,
     price: false,
-    Category: false,
+    category: false,
     description: false,
   });
 
-  // Fetch categories from API
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/category/');
-        setCategories(response.data); // Assuming response.data is an array of categories
-      } catch (error) {
+    // Fetch categories from the backend
+    axios
+      .get('http://127.0.0.1:8000/api/category/')
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          setCategories(response.data);
+        } else {
+          console.error('Expected an array but got:', response.data);
+        }
+      })
+      .catch((error) => {
         toast.error('Failed to fetch categories');
-      }
-    };
-
-    fetchCategories();
+        console.error('There was an error fetching the categories!', error);
+      });
   }, []);
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    setProduct((prevState) => ({
+      ...prevState,
       [name]: value,
     }));
 
-    // Reset error state for the specific field
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: value ? false : true,
     }));
   };
 
-  // Handle file input changes
   const handleFileChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
+    setProduct((prevState) => ({
+      ...prevState,
       image: e.target.files[0],
     }));
   };
 
-  // Submit form
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     let isValid = true;
     const newErrors = { ...errors };
 
-    if (!formData.medicine_name) {
+    if (!product.medicine_name) {
       newErrors.medicine_name = true;
       toast.error('Medicine name cannot be empty!');
       isValid = false;
     }
 
-    if (formData.price <= 0) {
+    if (!product.price || product.price <= 0) {
       newErrors.price = true;
-      toast.error('Price must be greater than zero.');
-      isValid = false;
-    } else if (!formData.price) {
-      newErrors.price = true;
-      toast.error('Price cannot be empty!');
+      toast.error('Price must be greater than zero!');
       isValid = false;
     }
 
-    if (!formData.Category) {
-      newErrors.Category = true;
+    if (!product.category) {
+      newErrors.category = true;
       toast.error('Category cannot be empty!');
       isValid = false;
     }
 
-    if (!formData.description) {
+    if (!product.description) {
       newErrors.description = true;
       toast.error('Description cannot be empty!');
       isValid = false;
@@ -99,33 +93,31 @@ const AddMedicine = () => {
       return;
     }
 
-    const form = new FormData();
-    for (const key in formData) {
-      form.append(key, formData[key]);
-    }
+    const formData = new FormData();
+    formData.append('medicine_name', product.medicine_name);
+    formData.append('price', product.price);
+    formData.append('category', product.category);
+    formData.append('image', product.image);
+    formData.append('description', product.description);
 
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/addmedicine/', form, {
+    axios
+      .post('http://127.0.0.1:8000/addmedicine/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      if (response.status === 201) {
+      })
+      .then((response) => {
         toast.success('Medicine added successfully!');
-        setFormData({
-          id: '',
+        setProduct({
           medicine_name: '',
           price: '',
-          description: '',
+          category: '',
           image: null,
-          Category: '',
+          description: '',
         });
-      } else {
-        toast.error('Failed to add medicine');
-      }
-    } catch (err) {
-      toast.error('Error while adding medicine');
-      console.error(err.message);
-    }
+      })
+      .catch((error) => {
+        toast.error('Error while adding medicine');
+        console.error('Error:', error.message);
+      });
   };
 
   return (
@@ -142,74 +134,72 @@ const AddMedicine = () => {
           className="space-y-6 px-8 py-6 max-w-2xl mx-auto bg-white rounded-lg shadow-lg shadow-blue-100 border border-gray-100"
           onSubmit={handleSubmit}
         >
-          <div className="grid grid-cols-1 gap-6">
-            {/* Medicine Name */}
-            <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-medium mb-1">Medicine Name</label>
-              <input
-                type="text"
-                name="medicine_name"
-                placeholder="Enter the name"
-                onChange={handleChange}
-                value={formData.medicine_name}
-                className={`px-4 py-2 border ${errors.medicine_name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-              />
-            </div>
+          {/* Medicine Name */}
+          <div className="flex flex-col">
+            <label className="text-gray-600 text-sm font-medium mb-1">Medicine Name</label>
+            <input
+              type="text"
+              name="medicine_name"
+              placeholder="Enter the name"
+              onChange={handleChange}
+              value={product.medicine_name}
+              className={`px-4 py-2 border ${errors.medicine_name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+            />
+          </div>
 
-            {/* Price */}
-            <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-medium mb-1">Price</label>
-              <input
-                type="number"
-                name="price"
-                placeholder="Enter the Price"
-                onChange={handleChange}
-                value={formData.price}
-                className={`px-4 py-2 border ${errors.price ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-              />
-            </div>
+          {/* Price */}
+          <div className="flex flex-col">
+            <label className="text-gray-600 text-sm font-medium mb-1">Price</label>
+            <input
+              type="number"
+              name="price"
+              placeholder="Enter the Price"
+              onChange={handleChange}
+              value={product.price}
+              className={`px-4 py-2 border ${errors.price ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+            />
+          </div>
 
-            {/* Category Dropdown */}
-            <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-medium mb-1">Category</label>
-              <select
-                name="Category"
-                onChange={handleChange}
-                value={formData.Category}
-                className={`px-4 py-2 border ${errors.Category ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-              >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.category_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* Category */}
+          <div className="flex flex-col">
+            <label className="text-gray-600 text-sm font-medium mb-1">Category</label>
+            <select
+              name="category"
+              onChange={handleChange}
+              value={product.category}
+              className={`px-4 py-2 border ${errors.category ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.category_name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            {/* Description */}
-            <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-medium mb-1">Description</label>
-              <textarea
-                name="description"
-                placeholder="Enter the Description"
-                onChange={handleChange}
-                value={formData.description}
-                className={`px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none`}
-                rows="4"
-              ></textarea>
-            </div>
+          {/* Description */}
+          <div className="flex flex-col">
+            <label className="text-gray-600 text-sm font-medium mb-1">Description</label>
+            <textarea
+              name="description"
+              placeholder="Enter the Description"
+              onChange={handleChange}
+              value={product.description}
+              className={`px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none`}
+              rows="4"
+            ></textarea>
+          </div>
 
-            {/* Medicine Image */}
-            <div className="flex flex-col">
-              <label className="text-gray-600 text-sm font-medium mb-1">Medicine Image</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+          {/* Medicine Image */}
+          <div className="flex flex-col">
+            <label className="text-gray-600 text-sm font-medium mb-1">Medicine Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
 
           {/* Submit Button */}
@@ -217,7 +207,7 @@ const AddMedicine = () => {
             type="submit"
             className="w-full px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition duration-200"
           >
-            Submit
+            Add Medicine
           </button>
         </form>
       </section>

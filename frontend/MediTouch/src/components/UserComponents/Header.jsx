@@ -79,14 +79,14 @@ const Header = () => {
                   Appointments
                 </Link>
               </li>
-              <li className="max-lg:border-b border-gray-300 max-lg:py-3 px-3">
+              {/* <li className="max-lg:border-b border-gray-300 max-lg:py-3 px-3">
                 <Link
                   to="#"
                   className="hover:text-[#FF0000] text-[#000000] block font-semibold text-[15px]"
                 >
                   Cart
                 </Link>
-              </li>
+              </li> */}
               <li className="max-lg:border-b border-gray-300 max-lg:py-3 px-3">
                 <Link
                   to="#"

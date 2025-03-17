@@ -18,7 +18,7 @@ import PaymentSuccess from "./pages/UserPages/PaymentSuccess";
 import AdminLogin from "./pages/AdminPages/AdminLogin";
 import Pharmacy from "./pages/UserPages/Pharmacy";
 import MedicineOrdered from "./pages/AdminPages/MedicineOrdered";
-import PrescriptionViewer from "./pages/AdminPages/PrescriptionViewer";
+
 
 const Myroutes = () => {
   return (
@@ -50,8 +50,7 @@ const Myroutes = () => {
           <Route path="editcategory/:id" element={<EditCategory />} />
           <Route path="medicineorders" element={<MedicineOrdered />} />
           
-          {/* Updated dynamic route for Prescription Viewer */}
-          <Route path="prescriptions/:fileName" element={<PrescriptionViewer />} />
+           
         </Route>
 
         {/* Payment Success Route */}
