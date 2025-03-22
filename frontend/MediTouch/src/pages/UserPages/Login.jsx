@@ -18,17 +18,16 @@ const Login = () => {
         alert("Login successful!");
         console.log(response.data);
 
-        // Store the tokens and user info
+        // Store the tokens
         localStorage.setItem("accessToken", response.data.accesstoken);
         localStorage.setItem("refreshToken", response.data.refreshtoken);
-        localStorage.setItem("userEmail", response.data.email);
-        
-        // Automatically set the user role as "User"
-        localStorage.setItem("userRole", "User");
 
-        // Redirect to the user homepage
-        navigate("/#");
+        // Store user data properly
+        const user = response.data.user;
+        localStorage.setItem("user", JSON.stringify(user));
 
+        // Redirect to the home page
+        navigate("/");
         reset();
       }
     } catch (error) {
@@ -52,12 +51,10 @@ const Login = () => {
           <div className="p-8 rounded-2xl bg-white shadow">
             <h2 className="text-gray-800 text-center text-2xl font-bold">Sign in</h2>
             <form className="mt-8 space-y-4" onSubmit={handleSubmit(handleLogin)}>
-              
               {/* Email Input */}
               <div>
                 <label className="text-gray-800 text-sm mb-2 block">Email</label>
                 <input
-                  name="email"
                   type="text"
                   {...register("email", { required: true })}
                   className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
@@ -69,7 +66,6 @@ const Login = () => {
               <div>
                 <label className="text-gray-800 text-sm mb-2 block">Password</label>
                 <input
-                  name="password"
                   type="password"
                   {...register("password", { required: true })}
                   className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"

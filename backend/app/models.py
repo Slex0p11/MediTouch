@@ -12,6 +12,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=200, unique=True)
     is_admin = models.BooleanField(default=False)
     is_user = models.BooleanField(default=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     dob = models.DateField()
 
     USERNAME_FIELD = 'email'
@@ -56,3 +57,15 @@ class Order(models.Model):
 
     def __str__(self):
         return self.medicine_name
+    
+
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    medicine = models.ForeignKey(medicine, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def total_price(self):
+        return self.medicine.price * self.quantity
+
+    def __str__(self):
+        return f"{self.quantity} x {self.medicine.medicine_name} - {self.user.username}"

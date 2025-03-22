@@ -18,6 +18,8 @@ import PaymentSuccess from "./pages/UserPages/PaymentSuccess";
 import AdminLogin from "./pages/AdminPages/AdminLogin";
 import Pharmacy from "./pages/UserPages/Pharmacy";
 import MedicineOrdered from "./pages/AdminPages/MedicineOrdered";
+import Cart from "./pages/UserPages/Cart";
+import ProfileScreen from "./pages/UserPages/ProfileScreen";
 
 
 const Myroutes = () => {
@@ -35,6 +37,8 @@ const Myroutes = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/order" element={<Esewa />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/profile" element={<ProfileScreen />} />
 
         {/* Admin Authentication Routes */}
         <Route path="/adminlogin" element={<AdminLogin />} />

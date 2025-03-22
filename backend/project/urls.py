@@ -35,6 +35,7 @@ urlpatterns = [
     # User Authentication
     path('register/', RegisterUser.as_view(), name='register'),
     path('login/', LoginUser.as_view(), name='login'),
+    path('api/profile/update/', UpdateProfileView.as_view(), name='update-profile'),
     
 
     # Medicine APIs
@@ -61,6 +62,12 @@ urlpatterns = [
     # Token Authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+
+    #Cart
+    path("cart/", get_cart_items, name="cart-items"),
+    path("cart/add/", add_to_cart, name="add-to-cart"),
+    path("cart/remove/<int:cart_item_id>/", remove_from_cart, name="remove-from-cart"),
 ]
 
 # Serve media files in development mode

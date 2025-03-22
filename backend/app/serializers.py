@@ -65,3 +65,18 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"      
+
+class CartItemSerializer(serializers.ModelSerializer):
+    medicine_name = serializers.ReadOnlyField(source="medicine.medicine_name")
+    price = serializers.ReadOnlyField(source="medicine.price")
+    image = serializers.ReadOnlyField(source="medicine.image.url")
+
+    class Meta:
+        model = CartItem
+        fields = ["id", "medicine", "medicine_name", "quantity", "price", "image"]
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email', 'username', 'dob', 'profile_picture']
+

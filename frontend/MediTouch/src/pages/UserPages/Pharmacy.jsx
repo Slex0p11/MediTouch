@@ -39,8 +39,9 @@ const Pharmacy = () => {
   // Filter medicines based on search query and selected category
   const filteredData = data.filter(
     (item) =>
-      item.medicine_name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (selectedCategory === "All" || item.category_name === selectedCategory)  // Fixed to use category_name from medicine data
+      (item.medicine_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       item.description.toLowerCase().includes(searchQuery.toLowerCase())) &&
+      (selectedCategory === "All" || item.category_name === selectedCategory)
   );
 
   return (

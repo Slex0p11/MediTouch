@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slices/cartSlice";
 import axios from "axios";
 import Header from "../../components/UserComponents/Header";
 import Footer from "../../components/UserComponents/Footer";
@@ -27,7 +29,11 @@ const Product = () => {
       });
   }, [id]);
 
+  const dispatch = useDispatch();
 
+  const handleAddToCart = () => {
+    dispatch(addToCart({ medicine_id: product.id, quantity }));
+  };
 
   const handleBuyNow = () => {
     navigate("/order", {
@@ -71,9 +77,6 @@ const Product = () => {
                 </p>
               </div>
 
-              
-               
-
               <div className="flex gap-4 mt-6 max-w-md">
                 <button
                   type="button"
@@ -84,10 +87,12 @@ const Product = () => {
                 </button>
                 <button
                   type="button"
-                  className="w-full px-4 py-2.5 outline-none border border-blue-600 bg-transparent hover:bg-gray-50 text-gray-800 text-sm font-semibold rounded"
+                  className="w-full px-4 py-2.5 border border-blue-600 bg-transparent hover:bg-gray-50 text-gray-800 text-sm font-semibold rounded"
+                  onClick={handleAddToCart}
                 >
                   Add to cart
                 </button>
+                ;
               </div>
             </div>
           </div>

@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .models import medicine, Category, User, Order
+from .models import medicine, Category, User, Order,CartItem
 from .serializers import *
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -22,19 +23,20 @@ class RegisterUser(generics.CreateAPIView):
 
 # User Login
 class LoginUser(APIView):
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(request, email=email, password=password)
+
         if user:
             refreshtoken = RefreshToken.for_user(user)
+            user_data = RegisterSerilaizer(user).data  # Serialize user data
             return Response({
-                "email": user.email,
-                "role": user.is_user,
+                "user": user_data,  # Send all user details
                 "refreshtoken": str(refreshtoken),
-                "accesstoken": str(refreshtoken.access_token)
+                "accesstoken": str(refreshtoken.access_token),
             })
-        return Response({"error": "Invalid Credentials"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Invalid Credentials"}, status=400)
 
 # Medicine Views
 class AllMedicine(generics.ListAPIView):
@@ -178,3 +180,63 @@ class OrderCreateView(APIView):
             serializer.save(prescription=file)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
+    
+def get_cart_items(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    serializer = CartItemSerializer(cart_items, many=True)
+    return Response(serializer.data)
+
+def add_to_cart(request):
+    user = request.user
+    medicine_id = request.data.get("medicine_id")
+    quantity = request.data.get("quantity", 1)
+
+    cart_item, created = CartItem.objects.get_or_create(
+        user=user, medicine_id=medicine_id, defaults={"quantity": quantity}
+    )
+    if not created:
+        cart_item.quantity += quantity
+        cart_item.save()
+
+    return Response({"message": "Added to cart successfully!"})
+
+def remove_from_cart(request, cart_item_id):
+    try:
+        cart_item = CartItem.objects.get(id=cart_item_id, user=request.user)
+        cart_item.delete()
+        return Response({"message": "Item removed from cart"})
+    except CartItem.DoesNotExist:
+        return Response({"error": "Item not found"}, status=404)
+    
+class UpdateProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    parser_classes = [MultiPartParser, FormParser]  # Add parsers for file upload
+
+    def put(self, request):
+        user = request.user
+
+        # Update the user profile with data from the request
+        user.first_name = request.data.get("first_name", user.first_name)
+        user.last_name = request.data.get("last_name", user.last_name)
+        user.email = request.data.get("email", user.email)
+        user.username = request.data.get("username", user.username)
+        user.dob = request.data.get("dob", user.dob)
+
+        # Handle the profile picture update if a new picture is uploaded
+        if 'profile_picture' in request.FILES:
+            user.profile_picture = request.FILES['profile_picture']
+        
+        user.save()
+
+        # Return the updated user data in the response
+        updated_user_data = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "username": user.username,
+            "dob": user.dob,
+            "profile_picture": user.profile_picture.url if user.profile_picture else None
+        }
+
+        return Response({"data": updated_user_data, "message": "Profile updated successfully"}, status=200)
