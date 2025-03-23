@@ -19,7 +19,9 @@ User = get_user_model()
 # User Registration
 class RegisterUser(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = RegisterSerilaizer
+    serializer_class = RegisterSerializer
+    permission_classes = []  # No authentication required
+    parser_classes = [MultiPartParser, FormParser]  # Add this line
 
 # User Login
 class LoginUser(APIView):
@@ -30,7 +32,7 @@ class LoginUser(APIView):
 
         if user:
             refreshtoken = RefreshToken.for_user(user)
-            user_data = RegisterSerilaizer(user).data  # Serialize user data
+            user_data = RegisterSerializer(user).data  # Serialize user data
             return Response({
                 "user": user_data,  # Send all user details
                 "refreshtoken": str(refreshtoken),
@@ -111,11 +113,9 @@ class UserListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserDeleteView(APIView):
-     
-
-    def delete(self, request, username, *args, **kwargs):
+    def delete(self, request, id, *args, **kwargs):  # Change 'username' to 'id'
         try:
-            user = User.objects.get(username=username)  # Get the user by username (or another identifier)
+            user = User.objects.get(id=id)  # Get the user by ID
             user.delete()  # Delete the user
             return Response({"message": "User deleted successfully"}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
@@ -123,11 +123,9 @@ class UserDeleteView(APIView):
 
 
 class UserUpdateView(APIView):
-     
-
-    def put(self, request, username, *args, **kwargs):
+    def put(self, request, id, *args, **kwargs):  # Change 'username' to 'id'
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(id=id)  # Get the user by ID
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -208,35 +206,18 @@ def remove_from_cart(request, cart_item_id):
     except CartItem.DoesNotExist:
         return Response({"error": "Item not found"}, status=404)
     
-class UpdateProfileView(APIView):
+class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-    parser_classes = [MultiPartParser, FormParser]  # Add parsers for file upload
 
-    def put(self, request):
+    def get(self, request):
         user = request.user
-
-        # Update the user profile with data from the request
-        user.first_name = request.data.get("first_name", user.first_name)
-        user.last_name = request.data.get("last_name", user.last_name)
-        user.email = request.data.get("email", user.email)
-        user.username = request.data.get("username", user.username)
-        user.dob = request.data.get("dob", user.dob)
-
-        # Handle the profile picture update if a new picture is uploaded
-        if 'profile_picture' in request.FILES:
-            user.profile_picture = request.FILES['profile_picture']
-        
-        user.save()
-
-        # Return the updated user data in the response
-        updated_user_data = {
-            "first_name": user.first_name,
-            "last_name": user.last_name,
+        data = {
+            "id": user.id,
             "email": user.email,
             "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
             "dob": user.dob,
-            "profile_picture": user.profile_picture.url if user.profile_picture else None
+            "profile_picture": request.build_absolute_uri(user.profile_picture.url) if user.profile_picture else None,
         }
-
-        return Response({"data": updated_user_data, "message": "Profile updated successfully"}, status=200)
+        return Response(data)

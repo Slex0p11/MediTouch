@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const {
@@ -11,20 +11,42 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const navigate = useNavigate();  // Initialize useNavigate hook
+  const navigate = useNavigate();
 
   const handleRegister = async (data) => {
+    const formData = new FormData();
+    formData.append("email", data.email);
+    formData.append("username", data.username);
+    formData.append("first_name", data.first_name);
+    formData.append("last_name", data.last_name);
+    formData.append("dob", data.dob);
+    formData.append("password", data.password);
+    if (data.profile_picture[0]) {
+      formData.append("profile_picture", data.profile_picture[0]);
+    }
+  
     try {
-      const response = await axios.post("http://127.0.0.1:8000/register/", data);
-      alert("Registration successful!");
+      // Send registration request
+      const response = await axios.post("http://127.0.0.1:8000/register/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      // If registration is successful, show a success message and redirect to login
+      alert("Registration successful! Please log in.");
       console.log(response.data);
+      navigate("/login");  // Redirect to the login page
       reset();
-      
-      // Redirect to the login page after successful registration
-      navigate("/login");
     } catch (error) {
       console.error(error.response?.data || "Error occurred");
-      alert("Error during registration. Please try again.");
+      if (error.response?.data) {
+        // Display detailed error messages from the backend
+        const errorMessages = Object.values(error.response.data).flat().join("\n");
+        alert(`Error: ${errorMessages}`);
+      } else {
+        alert("Error during registration. Please try again.");
+      }
     }
   };
 
@@ -157,6 +179,19 @@ const Register = () => {
                   {errors.password.message}
                 </p>
               )}
+            </div>
+
+            {/* Profile Picture */}
+            <div className="sm:col-span-2">
+              <label className="text-gray-600 text-sm mb-2 block">
+                Profile Picture
+              </label>
+              <input
+                {...register("profile_picture")}
+                type="file"
+                accept="image/*"
+                className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3 rounded focus:bg-white outline-blue-500 transition-all"
+              />
             </div>
           </div>
 

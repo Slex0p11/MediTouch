@@ -69,3 +69,5 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.medicine.medicine_name} - {self.user.username}"
+    
+ 

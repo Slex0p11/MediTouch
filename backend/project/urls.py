@@ -27,15 +27,15 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', UserListView.as_view(), name='user-list'),
-    path('api/users/<str:username>/', UserDeleteView.as_view(), name='delete-user'),
-    path('api/users/<str:username>/update/', UserUpdateView.as_view(), name='user-update'),
+    path('users/delete/<int:id>/', UserDeleteView.as_view(), name='user-delete'),
+    path('users/update/<int:id>/', UserUpdateView.as_view(), name='user-update'),
      
     
 
     # User Authentication
     path('register/', RegisterUser.as_view(), name='register'),
     path('login/', LoginUser.as_view(), name='login'),
-    path('api/profile/update/', UpdateProfileView.as_view(), name='update-profile'),
+    path('api/user/profile/', UserProfileView.as_view(), name='user-profile'),
     
 
     # Medicine APIs

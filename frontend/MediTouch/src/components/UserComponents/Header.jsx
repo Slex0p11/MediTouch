@@ -1,22 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
 
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData && userData !== "undefined") { // Check if data exists and is not 'undefined'
-      try {
-        setUser(JSON.parse(userData)); // Parse only if valid
-      } catch (error) {
-        console.error("Error parsing user data", error);
-      }
+    if (accessToken) {
+      // Fetch user data from the backend
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get("http://127.0.0.1:8000/api/user/profile/", {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          setUser(response.data);
+        } catch (error) {
+          console.error("Error fetching user data", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchUserData();
+    } else {
+      setLoading(false);
     }
-  }, []);
+  }, [accessToken]);
 
   const userEmail = user ? user.email : null;
   const userName = user ? user.username : null;
@@ -25,7 +40,6 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user"); // Remove the entire user object
     navigate("/login");
   };
 
@@ -34,6 +48,10 @@ const Header = () => {
   const toggleDropdown = () => {
     setIsDropdownVisible((prev) => !prev);
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading spinner while fetching data
+  }
 
   return (
     <header className="flex shadow-md py-4 px-4 sm:px-10 bg-[#0076C1] font-poppin min-h-[70px] tracking-wide relative z-50 m-0">
