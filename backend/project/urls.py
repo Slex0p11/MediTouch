@@ -29,13 +29,12 @@ urlpatterns = [
     path('api/users/', UserListView.as_view(), name='user-list'),
     path('users/delete/<int:id>/', UserDeleteView.as_view(), name='user-delete'),
     path('users/update/<int:id>/', UserUpdateView.as_view(), name='user-update'),
+    path('api/user/profile/', UserProfileView.as_view(), name='user-profile'),
+    path('api/user/profile/update/', UserProfileUpdateView.as_view(), name='user-profile-update'),
      
-    
-
     # User Authentication
     path('register/', RegisterUser.as_view(), name='register'),
     path('login/', LoginUser.as_view(), name='login'),
-    path('api/user/profile/', UserProfileView.as_view(), name='user-profile'),
     
 
     # Medicine APIs

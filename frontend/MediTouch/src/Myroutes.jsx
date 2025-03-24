@@ -19,6 +19,7 @@ import AdminLogin from "./pages/AdminPages/AdminLogin";
 import Pharmacy from "./pages/UserPages/Pharmacy";
 import MedicineOrdered from "./pages/AdminPages/MedicineOrdered";
 import Cart from "./pages/UserPages/Cart";
+import ProfileScreen from "./pages/UserPages/ProfileScreen";
  
 
 
@@ -30,6 +31,7 @@ const Myroutes = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Homepages />} />
           <Route path="/pharmacy" element={<Pharmacy />} />
+        <Route path="/profile" element={<ProfileScreen />} />
         </Route>
 
         {/* Authentication Routes */}

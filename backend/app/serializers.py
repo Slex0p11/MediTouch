@@ -88,3 +88,21 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if obj.profile_picture:
             return self.context['request'].build_absolute_uri(obj.profile_picture.url)
         return None
+
+class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'dob', 'profile_picture']
+
+    def update(self, instance, validated_data):
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.username = validated_data.get('username', instance.username)
+        instance.dob = validated_data.get('dob', instance.dob)
+
+        # Handle profile picture update
+        if 'profile_picture' in validated_data:
+            instance.profile_picture = validated_data['profile_picture']
+
+        instance.save()
+        return instance
