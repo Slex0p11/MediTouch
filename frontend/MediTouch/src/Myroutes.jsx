@@ -20,6 +20,8 @@ import Pharmacy from "./pages/UserPages/Pharmacy";
 import MedicineOrdered from "./pages/AdminPages/MedicineOrdered";
 import Cart from "./pages/UserPages/Cart";
 import ProfileScreen from "./pages/UserPages/ProfileScreen";
+import RegisterDoc from "./pages/DoctorPages/RegisterDoc";
+import AdminDoctorsPanel from "./pages/AdminPages/AdminDoctorsPanel";
  
 
 
@@ -40,6 +42,7 @@ const Myroutes = () => {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/order" element={<Esewa />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/registerdoctor" element={<RegisterDoc />} />
          
 
         {/* Admin Authentication Routes */}
@@ -55,6 +58,8 @@ const Myroutes = () => {
           <Route path="addcategory" element={<AddCategory />} />
           <Route path="editcategory/:id" element={<EditCategory />} />
           <Route path="medicineorders" element={<MedicineOrdered />} />
+          <Route path="viewdoctor" element={<AdminDoctorsPanel />} />
+          
           
            
         </Route>

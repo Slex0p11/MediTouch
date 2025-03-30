@@ -63,10 +63,10 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 
-    #Cart
-    path("cart/", get_cart_items, name="cart-items"),
-    path("cart/add/", add_to_cart, name="add-to-cart"),
-    path("cart/remove/<int:cart_item_id>/", remove_from_cart, name="remove-from-cart"),
+    #Appointment
+    path('api/doctors/register/', DoctorRegisterView.as_view(), name='doctor-register'),
+    path('api/admin/doctors/pending/', PendingDoctorsView.as_view(), name='pending-doctors'),
+    path('api/admin/doctors/approve/<int:doctor_id>/', ApproveDoctorView.as_view(), name='approve-doctor'),
 ]
 
 # Serve media files in development mode

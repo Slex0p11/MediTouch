@@ -13,7 +13,8 @@ const Product = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [errorMsg, setErrorMsg] = useState("");
+  const dispatch = useDispatch();
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   useEffect(() => {
     axios
@@ -29,13 +30,39 @@ const Product = () => {
       });
   }, [id]);
 
-  const dispatch = useDispatch();
+  const handleAddToCart = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        setShowLoginPrompt(true);
+        return;
+      }
 
-  const handleAddToCart = () => {
-    dispatch(addToCart({ medicine_id: product.id, quantity }));
+      await axios.post(
+        "http://127.0.0.1:8000/api/cart/add/",
+        { medicine_id: product.id, quantity },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      dispatch(addToCart({ medicine_id: product.id, quantity }));
+      alert("Added to cart successfully!");
+    } catch (error) {
+      console.error("Failed to add to cart", error.response);
+    }
   };
 
   const handleBuyNow = () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setShowLoginPrompt(true);
+      return;
+    }
+    
     navigate("/order", {
       state: {
         product,
@@ -45,13 +72,48 @@ const Product = () => {
     });
   };
 
+  const handleContinueToLogin = () => {
+    setShowLoginPrompt(false);
+    navigate("/login", { state: { from: `/product/${id}` } });
+  };
+
   if (loading) return <p className="text-center mt-5">Loading product...</p>;
   if (error) return <p className="text-center text-red-600 mt-5">{error}</p>;
 
   return (
     <>
       <Header />
-      <div className="font-sans bg-white">
+      <div className="font-sans bg-white relative"> {/* Added relative for positioning */}
+        {/* Login Prompt Overlay */}
+        {showLoginPrompt && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Login Required
+              </h3>
+              <p className="text-sm text-gray-500 mb-6">
+                You need to login to proceed with your purchase.
+              </p>
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => setShowLoginPrompt(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                  onClick={handleContinueToLogin}
+                >
+                  Continue to Login
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="p-4 lg:max-w-7xl max-w-4xl mx-auto">
           <div className="grid items-start grid-cols-1 lg:grid-cols-5 gap-12 shadow-md p-6 rounded">
             <div className="lg:col-span-3 w-full text-center">
@@ -68,9 +130,7 @@ const Product = () => {
               <h3 className="text-xl font-bold text-gray-800">
                 {product.medicine_name}
               </h3>
-              <p className="text-sm text-gray-500 mt-2">
-                {product.description}
-              </p>
+              <p className="text-sm text-gray-500 mt-2">{product.description}</p>
               <div className="flex items-center gap-4 mt-6">
                 <p className="text-gray-800 text-2xl font-bold">
                   Total Price: Rs. {product.price * quantity}
@@ -86,13 +146,11 @@ const Product = () => {
                   Buy now
                 </button>
                 <button
-                  type="button"
-                  className="w-full px-4 py-2.5 border border-blue-600 bg-transparent hover:bg-gray-50 text-gray-800 text-sm font-semibold rounded"
                   onClick={handleAddToCart}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                 >
-                  Add to cart
+                  Add to Cart
                 </button>
-                ;
               </div>
             </div>
           </div>

@@ -68,14 +68,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = "__all__"      
 
-class CartItemSerializer(serializers.ModelSerializer):
-    medicine_name = serializers.ReadOnlyField(source="medicine.medicine_name")
-    price = serializers.ReadOnlyField(source="medicine.price")
-    image = serializers.ReadOnlyField(source="medicine.image.url")
-
-    class Meta:
-        model = CartItem
-        fields = ["id", "medicine", "medicine_name", "quantity", "price", "image"]
+ 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     profile_picture = serializers.SerializerMethodField()
@@ -106,3 +99,74 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+class DoctorRegistrationSerializer(serializers.Serializer):
+    first_name = serializers.CharField(max_length=200)
+    last_name = serializers.CharField(max_length=200)
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True, min_length=8)
+    dob = serializers.DateField()
+    license_file = serializers.FileField()
+    degree_file = serializers.FileField()
+    specialization = serializers.CharField(max_length=100)
+
+    def create(self, validated_data):
+        # Generate unique username from email
+        base_username = validated_data['email'].split('@')[0]
+        username = base_username
+        counter = 1
+        
+        # Ensure username is unique
+        while CustomUser.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+
+        # Create user
+        user = CustomUser.objects.create_user(
+            email=validated_data['email'],
+            username=username,  # Use auto-generated username
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            password=validated_data['password'],
+            dob=validated_data['dob'],
+            is_doctor=True,
+            is_user=False,
+            is_admin=False  # Explicitly set admin status
+        )
+        
+        # Create doctor profile
+        doctor = Doctor.objects.create(
+            user=user,
+            medical_license=validated_data['license_file'],
+            degree_certificate=validated_data['degree_file'],
+            specialization=validated_data['specialization']
+        )
+        return doctor
+    
+class DoctorListSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    email = serializers.CharField(source='user.email')
+    dob = serializers.DateField(source='user.dob')
+    license_url = serializers.SerializerMethodField()
+    degree_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Doctor
+        fields = [
+            'id', 'first_name', 'last_name', 'email', 'dob',
+            'specialization', 'license_url', 'degree_url',
+            'is_verified', 'created_at'
+        ]
+        read_only_fields = fields
+
+    def get_license_url(self, obj):
+        if obj.medical_license:
+            return self.context['request'].build_absolute_uri(obj.medical_license.url)
+        return None
+
+    def get_degree_url(self, obj):
+        if obj.degree_certificate:
+            return self.context['request'].build_absolute_uri(obj.degree_certificate.url)
+        return None
+ 

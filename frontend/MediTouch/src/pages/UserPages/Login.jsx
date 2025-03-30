@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
+  const [showPassword, setShowPassword] = useState(false);  
   const navigate = useNavigate();
 
   const handleLogin = async (data) => {
@@ -47,7 +49,7 @@ const Login = () => {
               className="w-40 mb-8 mx-auto block"
             />
           </a>
-
+        
           <div className="p-8 rounded-2xl bg-white shadow">
             <h2 className="text-gray-800 text-center text-2xl font-bold">Sign in</h2>
             <form className="mt-8 space-y-4" onSubmit={handleSubmit(handleLogin)}>
@@ -62,15 +64,23 @@ const Login = () => {
                 />
               </div>
 
-              {/* Password Input */}
-              <div>
+              {/* Password Input with Toggle */}
+              <div className="relative">
                 <label className="text-gray-800 text-sm mb-2 block">Password</label>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   {...register("password", { required: true })}
-                  className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                  className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600 pr-10"
                   placeholder="Enter password"
                 />
+                <button
+                  type="button"
+                  className="absolute left-50 bottom-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                </button>
               </div>
 
               <div className="!mt-8">
@@ -89,6 +99,15 @@ const Login = () => {
                   onClick={() => navigate("/register")}
                 >
                   Register here
+                </span>
+              </p>
+
+              <p className="text-gray-800 text-sm !mt-8 text-center">
+                <span
+                  className="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold cursor-pointer"
+                  onClick={() => navigate("/registerdoctor")}
+                >Register as a Doctor?
+                   
                 </span>
               </p>
             </form>

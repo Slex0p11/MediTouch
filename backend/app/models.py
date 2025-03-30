@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from project import settings
 
 
+
 User = settings.AUTH_USER_MODEL
 
 class CustomUser(AbstractUser):
@@ -12,11 +13,12 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=200, unique=True)
     is_admin = models.BooleanField(default=False)
     is_user = models.BooleanField(default=True)
+    is_doctor=models.BooleanField(default=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     dob = models.DateField()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'username', 'dob' ]
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):
         return self.email
@@ -58,16 +60,18 @@ class Order(models.Model):
     def __str__(self):
         return self.medicine_name
     
-
-class CartItem(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    medicine = models.ForeignKey(medicine, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-
-    def total_price(self):
-        return self.medicine.price * self.quantity
-
-    def __str__(self):
-        return f"{self.quantity} x {self.medicine.medicine_name} - {self.user.username}"
-    
  
+class Doctor(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='doctor_profile')
+    specialization = models.CharField(max_length=100)
+    medical_license = models.FileField(upload_to='doctor_licenses/')
+    degree_certificate = models.FileField(upload_to='doctor_certificates/')
+    is_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.get_full_name()} - {'Verified' if self.is_verified else 'Pending'}"
+    

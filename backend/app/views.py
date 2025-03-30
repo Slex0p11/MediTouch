@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
-from rest_framework import generics, status
-from .models import medicine, Category, User, Order,CartItem
+from rest_framework import generics, status, permissions
+from .models import *
 from .serializers import *
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 
 
@@ -41,6 +41,7 @@ class LoginUser(APIView):
         return Response({"error": "Invalid Credentials"}, status=400)
 
 # Medicine Views
+
 class AllMedicine(generics.ListAPIView):
     queryset = medicine.objects.all()
     serializer_class = medicineSerializer
@@ -123,9 +124,9 @@ class UserDeleteView(APIView):
 
 
 class UserUpdateView(APIView):
-    def put(self, request, id, *args, **kwargs):  # Change 'username' to 'id'
+    def put(self, request, id, *args, **kwargs):  
         try:
-            user = User.objects.get(id=id)  # Get the user by ID
+            user = User.objects.get(id=id)   
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -179,32 +180,7 @@ class OrderCreateView(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
-def get_cart_items(request):
-    cart_items = CartItem.objects.filter(user=request.user)
-    serializer = CartItemSerializer(cart_items, many=True)
-    return Response(serializer.data)
-
-def add_to_cart(request):
-    user = request.user
-    medicine_id = request.data.get("medicine_id")
-    quantity = request.data.get("quantity", 1)
-
-    cart_item, created = CartItem.objects.get_or_create(
-        user=user, medicine_id=medicine_id, defaults={"quantity": quantity}
-    )
-    if not created:
-        cart_item.quantity += quantity
-        cart_item.save()
-
-    return Response({"message": "Added to cart successfully!"})
-
-def remove_from_cart(request, cart_item_id):
-    try:
-        cart_item = CartItem.objects.get(id=cart_item_id, user=request.user)
-        cart_item.delete()
-        return Response({"message": "Item removed from cart"})
-    except CartItem.DoesNotExist:
-        return Response({"error": "Item not found"}, status=404)
+ 
     
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -234,3 +210,55 @@ class UserProfileUpdateView(APIView):
             serializer.save()
             return Response({"message": "Profile updated successfully", "data": serializer.data}, status=200)
         return Response(serializer.errors, status=400)
+    
+
+class DoctorRegisterView(APIView):
+    def post(self, request):
+        serializer = DoctorRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Doctor registration submitted for admin approval.You will be notified via provided Email."},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class PendingDoctorsView(APIView):
+     
+
+    def get(self, request):
+        pending_doctors = Doctor.objects.filter(is_verified=False).select_related('user')
+        serializer = DoctorListSerializer(
+            pending_doctors, 
+            many=True,
+            context={'request': request}
+        )
+        return Response({
+            'status': 'success',
+            'count': pending_doctors.count(),
+            'doctors': serializer.data
+        })
+
+class ApproveDoctorView(APIView):
+     
+
+    def patch(self, request, doctor_id):
+        try:
+            doctor = Doctor.objects.get(id=doctor_id, is_verified=False)
+        except Doctor.DoesNotExist:
+            return Response(
+                {'error': 'Doctor not found or already approved'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        doctor.is_verified = True
+        doctor.save()
+        
+        # Here you might want to send an approval email to the doctor
+        # send_approval_email(doctor.user.email)
+        
+        return Response({
+            'status': 'success',
+            'message': 'Doctor approved successfully',
+            'doctor': DoctorListSerializer(doctor, context={'request': request}).data
+        })

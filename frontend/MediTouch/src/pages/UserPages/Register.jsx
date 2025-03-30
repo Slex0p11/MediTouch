@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 const Register = () => {
   const {
@@ -11,6 +12,7 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const navigate = useNavigate();
 
   const handleRegister = async (data) => {
@@ -26,22 +28,19 @@ const Register = () => {
     }
   
     try {
-      // Send registration request
       const response = await axios.post("http://127.0.0.1:8000/register/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
   
-      // If registration is successful, show a success message and redirect to login
       alert("Registration successful! Please log in.");
       console.log(response.data);
-      navigate("/login");  // Redirect to the login page
+      navigate("/login");
       reset();
     } catch (error) {
       console.error(error.response?.data || "Error occurred");
       if (error.response?.data) {
-        // Display detailed error messages from the backend
         const errorMessages = Object.values(error.response.data).flat().join("\n");
         alert(`Error: ${errorMessages}`);
       } else {
@@ -157,23 +156,32 @@ const Register = () => {
               )}
             </div>
 
-            {/* Password */}
+            {/* Password with toggle */}
             <div>
               <label className="text-gray-600 text-sm mb-2 block">
                 Password
               </label>
-              <input
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters long",
-                  },
-                })}
-                type="password"
-                className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3 rounded focus:bg-white outline-blue-500 transition-all"
-                placeholder="Enter password"
-              />
+              <div className="relative">
+                <input
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters long",
+                    },
+                  })}
+                  type={showPassword ? "text" : "password"}
+                  className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3 rounded focus:bg-white outline-blue-500 transition-all pr-10"
+                  placeholder="Enter password"
+                />
+                <button
+                  type="button"
+                  className="absolute left-50 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.password.message}
