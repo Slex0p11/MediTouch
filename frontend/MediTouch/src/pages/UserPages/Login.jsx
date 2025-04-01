@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
@@ -40,6 +41,15 @@ const Login = () => {
 
   return (
     <div className="bg-gray-50 font-[sans-serif]">
+      {/* Add Helmet for head management */}
+      <Helmet>
+        <title>Login | Meditouch</title>
+        <meta name="description" content="Sign in to access your account" />
+        <meta property="og:title" content="Login Page" />
+        <meta property="og:description" content="Sign in to your account" />
+        <meta name="robots" content="noindex, nofollow" /> {/* Optional: prevent search indexing */}
+      </Helmet>
+
       <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
         <div className="max-w-md w-full">
           <a href="#">
@@ -106,8 +116,8 @@ const Login = () => {
                 <span
                   className="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold cursor-pointer"
                   onClick={() => navigate("/registerdoctor")}
-                >Register as a Doctor?
-                   
+                >
+                  Register as a Doctor?
                 </span>
               </p>
             </form>
