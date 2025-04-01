@@ -22,6 +22,7 @@ import Cart from "./pages/UserPages/Cart";
 import ProfileScreen from "./pages/UserPages/ProfileScreen";
 import RegisterDoc from "./pages/DoctorPages/RegisterDoc";
 import AdminDoctorsPanel from "./pages/AdminPages/AdminDoctorsPanel";
+import About from "./components/UserComponents/About";
  
 
 
@@ -34,6 +35,7 @@ const Myroutes = () => {
           <Route index element={<Homepages />} />
           <Route path="/pharmacy" element={<Pharmacy />} />
         <Route path="/profile" element={<ProfileScreen />} />
+        <Route path="/about" element={<About />} />
         </Route>
 
         {/* Authentication Routes */}

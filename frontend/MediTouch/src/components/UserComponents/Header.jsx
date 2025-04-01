@@ -86,8 +86,8 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link to="#" className="hover:text-[#FF0000] text-[#000000] font-semibold text-[15px]">
-              About
+            <Link to="/about" className="hover:text-[#FF0000] text-[#000000] font-semibold text-[15px]">
+              About Us
             </Link>
           </li>
         </ul>
