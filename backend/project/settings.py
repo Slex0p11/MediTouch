@@ -156,3 +156,12 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5),
     
 }
+
+# Add email configuration (example for Gmail)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'np03cs4a220247@heraldcollege.edu.np'  # Your email
+EMAIL_HOST_PASSWORD = 'fcpj uwwi mhjl bpng'  # App password (not your regular password)
+DEFAULT_FROM_EMAIL = 'np03cs4a220247@heraldcollege.edu.np'  # Your email

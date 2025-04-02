@@ -67,7 +67,10 @@ class Doctor(models.Model):
     medical_license = models.FileField(upload_to='doctor_licenses/')
     degree_certificate = models.FileField(upload_to='doctor_certificates/')
     is_verified = models.BooleanField(default=False)
+    is_rejected = models.BooleanField(default=False)
+    rejection_reason = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)  # Track when status changes
     
     class Meta:
         ordering = ['-created_at']

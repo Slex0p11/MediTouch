@@ -65,7 +65,7 @@ const Footer = () => {
               </li>
             </ul>
             <div className="!mt-8">
-              <h6 className="text-[13px] text-gray-400 font-medium">Get exclusive assets sent straight to your inbox</h6>
+              <h6 className="text-[13px] text-black-400 font-medium">Get exclusive assets sent straight to your inbox</h6>
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@ const Footer = () => {
         <hr className="my-6 border-gray-600" />
 
         <div className="max-w-screen-xl mx-auto text-center">
-          <p className="text-gray-400 text-[13px]">
+          <p className="text-black-400 text-bold">
             MediTouch Copyright © 2024. All rights reserved.
           </p>
         </div>

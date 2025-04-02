@@ -23,6 +23,7 @@ import ProfileScreen from "./pages/UserPages/ProfileScreen";
 import RegisterDoc from "./pages/DoctorPages/RegisterDoc";
 import AdminDoctorsPanel from "./pages/AdminPages/AdminDoctorsPanel";
 import About from "./components/UserComponents/About";
+import ApprovedDoctorsList from "./pages/DoctorPages/ApprovedDoctorsList";
  
 
 
@@ -61,6 +62,7 @@ const Myroutes = () => {
           <Route path="editcategory/:id" element={<EditCategory />} />
           <Route path="medicineorders" element={<MedicineOrdered />} />
           <Route path="viewdoctor" element={<AdminDoctorsPanel />} />
+          <Route path="approveddoctors" element={<ApprovedDoctorsList />} />
           
           
            

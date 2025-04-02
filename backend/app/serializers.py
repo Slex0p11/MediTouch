@@ -150,13 +150,18 @@ class DoctorListSerializer(serializers.ModelSerializer):
     dob = serializers.DateField(source='user.dob')
     license_url = serializers.SerializerMethodField()
     degree_url = serializers.SerializerMethodField()
+    is_rejected = serializers.BooleanField()
+    rejection_reason = serializers.CharField()
+    approved_date = serializers.DateTimeField(source='updated_at')
 
     class Meta:
         model = Doctor
         fields = [
             'id', 'first_name', 'last_name', 'email', 'dob',
             'specialization', 'license_url', 'degree_url',
-            'is_verified', 'created_at'
+            'is_verified', 'created_at','is_rejected', 
+            'rejection_reason',
+            'updated_at','approved_date'
         ]
         read_only_fields = fields
 

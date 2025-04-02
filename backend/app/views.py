@@ -11,6 +11,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.core.mail import send_mail
+from .email import send_doctor_approval_email,send_doctor_rejection_email
 
 
 
@@ -227,7 +229,7 @@ class PendingDoctorsView(APIView):
      
 
     def get(self, request):
-        pending_doctors = Doctor.objects.filter(is_verified=False).select_related('user')
+        pending_doctors = Doctor.objects.filter(is_verified=False,is_rejected=False).select_related('user')
         serializer = DoctorListSerializer(
             pending_doctors, 
             many=True,
@@ -240,8 +242,6 @@ class PendingDoctorsView(APIView):
         })
 
 class ApproveDoctorView(APIView):
-     
-
     def patch(self, request, doctor_id):
         try:
             doctor = Doctor.objects.get(id=doctor_id, is_verified=False)
@@ -254,11 +254,72 @@ class ApproveDoctorView(APIView):
         doctor.is_verified = True
         doctor.save()
         
-        # Here you might want to send an approval email to the doctor
-        # send_approval_email(doctor.user.email)
+        # Send approval email
+        try:
+            send_doctor_approval_email(
+                doctor_email=doctor.user.email,
+                doctor_name=f"{doctor.user.first_name} {doctor.user.last_name}"
+            )
+        except Exception as e:
+            # Log the error but don't fail the request
+            print(f"Failed to send approval email: {str(e)}")
         
         return Response({
             'status': 'success',
-            'message': 'Doctor approved successfully',
+            'message': 'Doctor approved successfully and notification email sent',
             'doctor': DoctorListSerializer(doctor, context={'request': request}).data
+        })
+    
+class RejectDoctorView(APIView):
+    def patch(self, request, doctor_id):
+        try:
+            doctor = Doctor.objects.get(id=doctor_id, is_verified=False, is_rejected=False)
+        except Doctor.DoesNotExist:
+            return Response(
+                {'error': 'Doctor not found or already processed'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        rejection_reason = request.data.get('rejection_reason', '')
+        if not rejection_reason:
+            return Response(
+                {'error': 'Rejection reason is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        doctor.is_rejected = True
+        doctor.rejection_reason = rejection_reason
+        doctor.save()
+        
+        # Send rejection email
+        try:
+            send_doctor_rejection_email(
+                doctor_email=doctor.user.email,
+                doctor_name=f"{doctor.user.first_name} {doctor.user.last_name}",
+                rejection_reason=rejection_reason
+            )
+            email_status = 'Rejection email sent'
+        except Exception as e:
+            print(f"Failed to send rejection email: {str(e)}")
+            email_status = 'Failed to send rejection email'
+        
+        return Response({
+            'status': 'success',
+            'message': 'Doctor registration rejected',
+            'email_status': email_status,
+            'doctor': DoctorListSerializer(doctor, context={'request': request}).data
+        })
+    
+class ApprovedDoctorsView(generics.ListAPIView):
+    serializer_class = DoctorListSerializer
+    queryset = Doctor.objects.filter(is_verified=True)
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True, context={'request': request})
+        
+        return Response({
+            'status': 'success',
+            'count': queryset.count(),
+            'approved_doctors': serializer.data
         })
