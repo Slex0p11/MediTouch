@@ -36,7 +36,7 @@ const About = () => {
         width: '100%', 
         marginTop: '30px'
       }}>
-        <h2 style={{ color: '#2980b9' }}>License</h2>
+        <h1 style={{ color: '#2980b9' }}>License</h1>
         <img 
           src="https://i.imgur.com/aCxxesk.png" 
           alt="MediTouch License" 
@@ -57,7 +57,7 @@ const About = () => {
         width: '100%', 
         marginTop: '30px'
       }}>
-        <h2 style={{ color: '#27ae60' }}>Registration Certificate</h2>
+        <h1 style={{ color: '#27ae60' }}>Registration Certificate</h1>
         <img 
           src="https://i.imgur.com/bUfJrrC.png" 
           alt="MediTouch Registration Certificate" 
