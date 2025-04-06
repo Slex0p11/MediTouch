@@ -9,11 +9,18 @@ const Esewa = () => {
   const location = useLocation();
   const { product, quantity: initialQuantity, totalPrice: initialTotalPrice } = location.state || {};
 
+  const [currentUser, setCurrentUser] = useState(null);
   const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [totalPrice, setTotalPrice] = useState(initialTotalPrice || 0);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [prescription, setPrescription] = useState(null);
+
+  useEffect(() => {
+    // Load user data when component mounts
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setCurrentUser(userData);
+  }, []);
 
   const pricePerUnit = product?.price || 0;
 
@@ -66,36 +73,42 @@ const Esewa = () => {
 
   const handleOrderSubmission = async (event) => {
     event.preventDefault();
-
-    if (!address || !phone) {
-      alert("Please enter your address and phone number.");
-      return;
-    }
-
-    if (!prescription) {
-      alert("Please upload a prescription before proceeding.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("medicine_name", product.medicine_name);
-    formData.append("quantity", quantity);
-    formData.append("price", totalPrice);
-    formData.append("address", address);
-    formData.append("phone", phone);
-    formData.append("image", product.image);
-    formData.append("status", "Pending");
-    formData.append("prescription", prescription);
-
+    
     try {
-      await axios.post("http://localhost:8000/api/orders/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      console.log("Order stored successfully in admin panel.");
-      event.target.submit(); // Now submit the form to eSewa
+      const user = JSON.parse(localStorage.getItem('user'));
+      
+      if (!user) {
+        alert("Please login first");
+        return;
+      }
+  
+      const formData = new FormData();
+      formData.append("medicine_name", product.medicine_name);
+      formData.append("quantity", quantity);
+      formData.append("price", totalPrice);
+      formData.append("address", address);
+      formData.append("phone", phone);
+      formData.append("image", product.image);
+      formData.append("status", "Pending");
+      formData.append("prescription", prescription);
+      formData.append("username", user.username); // Add username from localStorage
+  
+      const response = await axios.post(
+        "http://localhost:8000/api/orders/", 
+        formData, 
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+  
+      if (response.status === 201) {
+        event.target.submit(); // Proceed to payment
+      }
     } catch (error) {
-      console.error("Error storing order:", error);
-      alert("Failed to place order. Please try again.");
+      console.error('Error:', error.response?.data || error.message);
+      alert(`Order failed: ${error.response?.data?.error || error.message}`);
     }
   };
 

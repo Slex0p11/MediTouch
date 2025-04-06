@@ -7,18 +7,16 @@ User = get_user_model()
 
 # User Registration Serializer
 class RegisterSerializer(serializers.ModelSerializer):
-    profile_picture = serializers.ImageField(required=False, allow_null=True)  # Add this field
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
+    role = serializers.CharField(read_only=True)  # Add this field
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'first_name', 'last_name', 'dob', 'password', 'profile_picture')  # Add profile_picture
+        fields = ('email', 'username', 'first_name', 'last_name', 'dob', 'password', 'profile_picture', 'role')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        # Extract profile_picture from validated_data
         profile_picture = validated_data.pop('profile_picture', None)
-
-        # Create the user
         user = User.objects.create_user(
             email=validated_data['email'],
             username=validated_data['username'],
@@ -28,7 +26,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
 
-        # Save the profile picture if provided
         if profile_picture:
             user.profile_picture = profile_picture
             user.save()
@@ -52,10 +49,17 @@ class medicineSerializer(serializers.ModelSerializer):
 
 # User Serializer for Listing Users (Display)
 class UserSerializer(serializers.ModelSerializer):
+    role = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['id','email', 'username', 'first_name', 'last_name', 'dob' ]  # Add any other fields you want to display
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'dob', 'role']
 
+    def get_role(self, obj):
+        if hasattr(obj, 'doctor_profile'):
+            return "Doctor"
+        return "User"
+    
 # User Update Serializer (For Editing User Information)
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -64,9 +68,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ['username']  # Username is non-editable
     
 class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()  # Will show username instead of ID
+    
     class Meta:
         model = Order
-        fields = "__all__"      
+        fields = '__all__'
+        read_only_fields = ('user',)  # User is set automatically
 
  
 
@@ -124,14 +131,14 @@ class DoctorRegistrationSerializer(serializers.Serializer):
         # Create user
         user = CustomUser.objects.create_user(
             email=validated_data['email'],
-            username=username,  # Use auto-generated username
+            username=username,
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             password=validated_data['password'],
             dob=validated_data['dob'],
             is_doctor=True,
             is_user=False,
-            is_admin=False  # Explicitly set admin status
+            is_admin=False
         )
         
         # Create doctor profile

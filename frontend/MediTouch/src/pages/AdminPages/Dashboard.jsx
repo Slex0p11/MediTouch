@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUser, FaUserMd } from "react-icons/fa";
 import Useredit from "./Useredit";
 
 const Dashboard = () => {
@@ -80,88 +80,106 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl w-full mt-1 px-4 sm:px-6 lg:py-12 lg:px-8 ml-60">
-      <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl text-center">
+      <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl text-center mb-8">
         Admin Dashboard
       </h2>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 mt-6">
-        <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h5 className="text-gray-500">Total Medicines</h5>
-          <h2 className="text-3xl font-semibold text-indigo-600">
-            {stats.totalMedicines}
-          </h2>
-        </div>
-        <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h5 className="text-gray-500">Total Categories</h5>
-          <h2 className="text-3xl font-semibold text-indigo-600">
-            {stats.totalCategories}
-          </h2>
-        </div>
-        <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h5 className="text-gray-500">Total Users</h5>
-          <h2 className="text-3xl font-semibold text-indigo-600">
-            {stats.totalUsers}
-          </h2>
-        </div>
+      
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-10">
+        {[
+          { title: "Total Medicines", value: stats.totalMedicines, color: "bg-blue-100 text-blue-800" },
+          { title: "Total Categories", value: stats.totalCategories, color: "bg-green-100 text-green-800" },
+          { title: "Total Users", value: stats.totalUsers, color: "bg-purple-100 text-purple-800" }
+        ].map((stat, index) => (
+          <div key={index} className={`rounded-xl p-6 shadow-md ${stat.color}`}>
+            <h5 className="text-lg font-medium mb-2">{stat.title}</h5>
+            <h2 className="text-4xl font-bold">{stat.value}</h2>
+          </div>
+        ))}
       </div>
 
-      {/* User Management Table */}
-      <div className="mt-10">
-        <h3 className="text-2xl font-bold text-gray-900 text-center mb-4">
-          User Management
-        </h3>
+      {/* User Management Section */}
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-xl font-semibold text-gray-800">
+            User Management
+          </h3>
+        </div>
+        
         {loading ? (
-          <p className="text-center text-gray-500">Loading users...</p>
+          <div className="p-6 text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600"></div>
+            <p className="mt-2 text-gray-600">Loading users...</p>
+          </div>
         ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
+          <div className="p-6 text-center text-red-500 bg-red-50 rounded-lg m-4">
+            {error}
+          </div>
         ) : (
-          <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-6">
-            <table className="min-w-full leading-normal">
-              <thead>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-5 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th className="px-5 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    First Name
-                  </th>
-                  <th className="px-5 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Last Name
-                  </th>
-                  <th className="px-5 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Username
-                  </th>
-                  <th className="px-5 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Date of Birth
-                  </th>
-                  <th className="px-5 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  {["ID", "User", "Username", "DOB", "Role", "Actions"].map((header) => (
+                    <th
+                      key={header}
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {header}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="bg-white divide-y divide-gray-200">
                 {users.map((user) => (
-                  <tr key={user.id} className="border-b border-gray-200">
-                    <td className="px-5 py-3 text-gray-900">{user.id}</td>
-                    <td className="px-5 py-3 text-gray-900">
-                      {user.first_name}
+                  <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {user.id}
                     </td>
-                    <td className="px-5 py-3 text-gray-900">
-                      {user.last_name}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                          {user.role === "Doctor" ? (
+                            <FaUserMd className="text-indigo-600" />
+                          ) : (
+                            <FaUser className="text-indigo-600" />
+                          )}
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.first_name} {user.last_name}
+                          </div>
+                        </div>
+                      </div>
                     </td>
-                    <td className="px-5 py-3 text-gray-900">{user.username}</td>
-                    <td className="px-5 py-3 text-gray-900">{user.dob}</td>
-                    <td className="px-5 py-3">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.username}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(user.dob).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        ${user.role === "Doctor" 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-blue-100 text-blue-800"}`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleEdit(user.id)}
-                        className="text-blue-500 hover:text-blue-700 mr-3"
+                        className="text-indigo-600 hover:text-indigo-900 mr-4"
+                        title="Edit"
                       >
-                        <FaEdit />
+                        <FaEdit className="inline" />
                       </button>
                       <button
                         onClick={() => handleDelete(user.id)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-600 hover:text-red-900"
+                        title="Delete"
                       >
-                        <FaTrash />
+                        <FaTrash className="inline" />
                       </button>
                     </td>
                   </tr>

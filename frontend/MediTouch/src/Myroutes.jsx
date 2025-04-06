@@ -24,6 +24,8 @@ import RegisterDoc from "./pages/DoctorPages/RegisterDoc";
 import AdminDoctorsPanel from "./pages/AdminPages/AdminDoctorsPanel";
 import About from "./components/UserComponents/About";
 import ApprovedDoctorsList from "./pages/DoctorPages/ApprovedDoctorsList";
+import DoctorLogin from "./pages/DoctorPages/DoctorLogin";
+import Appointment from "./pages/UserPages/Appointment";
  
 
 
@@ -37,6 +39,7 @@ const Myroutes = () => {
           <Route path="/pharmacy" element={<Pharmacy />} />
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/about" element={<About />} />
+        <Route path="/appointment" element={<Appointment />} />
         </Route>
 
         {/* Authentication Routes */}
@@ -46,6 +49,7 @@ const Myroutes = () => {
         <Route path="/order" element={<Esewa />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/registerdoctor" element={<RegisterDoc />} />
+        <Route path="/doctorlogin" element={<DoctorLogin />} />
          
 
         {/* Admin Authentication Routes */}

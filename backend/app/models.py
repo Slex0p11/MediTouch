@@ -48,6 +48,12 @@ class medicine(models.Model):
     
 
 class Order(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,  # Temporarily allow null for existing orders
+        blank=True
+    )
     medicine_name = models.CharField(max_length=255)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)

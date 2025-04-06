@@ -94,14 +94,20 @@ class CategoryCount(APIView):
 # Count total users
 class UserCount(APIView):
     def get(self, request):
-        count = User.objects.count()
+        count = User.objects.exclude(
+            is_doctor=True,
+            doctor_profile__is_verified=False
+        ).count()
         return Response({"total_users": count}, status=status.HTTP_200_OK)
 
 class DashboardStats(APIView):
     def get(self, request):
         total_medicines = medicine.objects.count()
         total_categories = Category.objects.count()
-        total_users = User.objects.count()
+        total_users = User.objects.exclude(
+            is_doctor=True,
+            doctor_profile__is_verified=False
+        ).count()
 
         return Response({
             "totalMedicines": total_medicines,
@@ -111,7 +117,12 @@ class DashboardStats(APIView):
     
 class UserListView(APIView):
     def get(self, request):
-        users = User.objects.all()   
+        # Get all users except unapproved doctors
+        users = User.objects.exclude(
+            is_doctor=True,
+            doctor_profile__is_verified=False
+        )
+        
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -170,19 +181,32 @@ class OrderDeleteView(APIView):
         
 class OrderCreateView(APIView):
     parser_classes = (MultiPartParser, FormParser)
-
-    def post(self, request, *args, **kwargs):
-        file = request.FILES.get("prescription")
-        if not file:
-            return Response({"error": "Prescription is required"}, status=400)
-        
-        serializer = OrderSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(prescription=file)
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+     
     
- 
+    def post(self, request, *args, **kwargs):
+        try:
+            if 'prescription' not in request.FILES:
+                return Response({"error": "Prescription file is required"}, status=400)
+            
+            # Automatically associate the logged-in user
+            data = request.data.copy()
+            data['user'] = request.user.id
+            
+            serializer = OrderSerializer(data=data)
+            if serializer.is_valid():
+                # Save with the prescription file and user
+                order = serializer.save(
+                    prescription=request.FILES['prescription'],
+                    user=request.user
+                )
+                return Response(serializer.data, status=201)
+            return Response(serializer.errors, status=400)
+            
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=500
+            )
     
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
