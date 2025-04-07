@@ -15,13 +15,22 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Resources */}
+        {/* Quick Links */}
         <div className="space-y-4">
-          <h6 className="text-lg font-semibold">Resources</h6>
+          <h6 className="text-lg font-semibold">Quick Links</h6>
           <ul className="space-y-2.5">
-            <li><Link to="/blog" className="hover:underline">Blog</Link></li>
-            <li><Link to="/faq" className="hover:underline">FAQs</Link></li>
-            <li><Link to="/support" className="hover:underline">Customer Support</Link></li>
+            <li>
+              <Link to="/" className="hover:underline text-white">Home</Link>
+            </li>
+            <li>
+              <Link to="/pharmacy" className="hover:underline text-white">Pharmacy</Link>
+            </li>
+            <li>
+              <Link to="/appointment" className="hover:underline text-white">Appointments</Link>
+            </li>
+            <li>
+              <Link to="/about" className="hover:underline text-white">About Us</Link>
+            </li>
           </ul>
         </div>
 
@@ -29,8 +38,8 @@ const Footer = () => {
         <div className="space-y-4">
           <h6 className="text-lg font-semibold">Policies</h6>
           <ul className="space-y-2.5">
-            <li><Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link></li>
-            <li><Link to="/terms" className="hover:underline">Terms of Service</Link></li>
+            <li><Link to="/policy" className="hover:underline text-white">Privacy Policy</Link></li>
+            <li><Link to="/terms" className="hover:underline text-white">Terms of Service</Link></li>
           </ul>
         </div>
 

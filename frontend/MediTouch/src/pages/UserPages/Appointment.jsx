@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
-import { FaCalendarAlt, FaClock, FaUserMd, FaSearch, FaArrowRight, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
+import { FaCalendarAlt, FaUserMd, FaSearch, FaArrowRight, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const Appointment = () => {
@@ -16,17 +16,13 @@ const Appointment = () => {
     const fetchApprovedDoctors = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/admin/doctors/approved/');
+        const doctorsData = response.data.approved_doctors || [];
+
+        const validatedDoctors = doctorsData.map(doctor => ({
+          ...doctor,
+          specialization: doctor.specialization || 'General'
+        }));
         
-        // Validate and transform the response data
-        const doctorsData = response.data.approved_doctors || response.data;
-        const validatedDoctors = Array.isArray(doctorsData) 
-          ? doctorsData.map(doctor => ({
-              ...doctor,
-              user: doctor.user || { first_name: 'Unknown', last_name: 'Doctor', email: '' },
-              specialization: doctor.specialization || 'General'
-            }))
-          : [];
-          
         setApprovedDoctors(validatedDoctors);
         setFilteredDoctors(validatedDoctors);
         setLoading(false);
@@ -42,8 +38,8 @@ const Appointment = () => {
 
   useEffect(() => {
     const results = approvedDoctors.filter(doctor => {
-      const firstName = doctor.user?.first_name?.toLowerCase() || '';
-      const lastName = doctor.user?.last_name?.toLowerCase() || '';
+      const firstName = doctor.first_name?.toLowerCase() || '';
+      const lastName = doctor.last_name?.toLowerCase() || '';
       const specialization = doctor.specialization?.toLowerCase() || '';
       
       return (
@@ -91,7 +87,36 @@ const Appointment = () => {
           </p>
         </div>
 
-        {/* Search and date picker... (same as before) */}
+        {/* Search and date picker */}
+        <div className="mb-8 flex flex-col lg:flex-row gap-4 items-start lg:items-end">
+          {/* Search */}
+          <div className="relative w-full">
+            <div className="absolute inset-y-0 right-10 pl-3 flex items-center pointer-events-none">
+              <FaSearch className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="Search doctors by name or specialty"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          {/* Date Picker */}
+          <div className="relative w-full sm:w-64">
+            <div className="absolute inset-y-0 right-10 pl-3 flex items-center pointer-events-none">
+              <FaCalendarAlt className="text-gray-400 right-20" />
+            </div>
+            <input
+              type="date"
+              className="block w-full pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredDoctors.length > 0 ? (
@@ -104,7 +129,7 @@ const Appointment = () => {
                     </div>
                     <div className="ml-4">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Dr. {doctor.user?.first_name || 'Unknown'} {doctor.user?.last_name || ''}
+                        Dr. {doctor.first_name || 'Unknown'} {doctor.last_name || ''}
                       </h3>
                       <p className="mt-1 text-sm text-blue-600">
                         {doctor.specialization || 'General Practitioner'}
@@ -114,11 +139,15 @@ const Appointment = () => {
                   <div className="mt-4">
                     <div className="flex items-center text-sm text-gray-500">
                       <FaEnvelope className="flex-shrink-0 mr-2" />
-                      <span>{doctor.user?.email || 'Email not available'}</span>
+                      <span>{doctor.email || 'Email not available'}</span>
                     </div>
                     <div className="mt-2 flex items-center text-sm text-gray-500">
                       <FaGraduationCap className="flex-shrink-0 mr-2" />
                       <span>Verified Specialist</span>
+                    </div>
+                    <div className="mt-2 flex items-center text-sm text-gray-500">
+                      <FaCalendarAlt className="flex-shrink-0 mr-2" />
+                      <span>Approved on: {new Date(doctor.approved_date).toLocaleDateString()}</span>
                     </div>
                   </div>
                   <div className="mt-5">

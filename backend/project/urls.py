@@ -69,6 +69,8 @@ urlpatterns = [
     path('api/admin/doctors/approve/<int:doctor_id>/', ApproveDoctorView.as_view(), name='approve-doctor'),
     path('api/admin/doctors/reject/<int:doctor_id>/', RejectDoctorView.as_view(), name='reject-doctor'),
     path('api/admin/doctors/approved/', ApprovedDoctorsView.as_view(), name='approved-doctors'),
+    path('appointments/create/', CreateAppointmentAPIView.as_view(), name='create-appointment'),
+    path('doctor/<int:id>/', DoctorDetailView.as_view(), name='doctor-detail'),
 ]
 
 # Serve media files in development mode

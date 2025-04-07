@@ -84,3 +84,19 @@ class Doctor(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name()} - {'Verified' if self.is_verified else 'Pending'}"
     
+class Appointment(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField(null=True, blank=True)
+    reason = models.TextField(blank=True)
+
+    is_confirmed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['doctor', 'date', 'time']
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Appointment with Dr. {self.doctor.user.get_full_name()} on {self.date}"

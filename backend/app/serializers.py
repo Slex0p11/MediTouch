@@ -182,3 +182,19 @@ class DoctorListSerializer(serializers.ModelSerializer):
             return self.context['request'].build_absolute_uri(obj.degree_certificate.url)
         return None
  
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = '__all__'
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'first_name', 'last_name', 'email', 'profile_picture']
+
+class DoctorSerializer(serializers.ModelSerializer):
+    user = UserInfoSerializer(read_only=True)
+
+    class Meta:
+        model = Doctor
+        fields = ['id', 'user', 'specialization', 'is_verified']

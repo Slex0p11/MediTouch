@@ -26,6 +26,9 @@ import About from "./components/UserComponents/About";
 import ApprovedDoctorsList from "./pages/DoctorPages/ApprovedDoctorsList";
 import DoctorLogin from "./pages/DoctorPages/DoctorLogin";
 import Appointment from "./pages/UserPages/Appointment";
+import BookAppointment from "./pages/UserPages/BookAppointment";
+import Terms from "./components/UserComponents/Terms";
+import PrivacyPolicy from "./components/UserComponents/PrivacyPolicy";
  
 
 
@@ -40,6 +43,8 @@ const Myroutes = () => {
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/about" element={<About />} />
         <Route path="/appointment" element={<Appointment />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/policy" element={<PrivacyPolicy />} />
         </Route>
 
         {/* Authentication Routes */}
@@ -50,6 +55,7 @@ const Myroutes = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/registerdoctor" element={<RegisterDoc />} />
         <Route path="/doctorlogin" element={<DoctorLogin />} />
+        <Route path="/book-appointment/:id" element={<BookAppointment />} />
          
 
         {/* Admin Authentication Routes */}
