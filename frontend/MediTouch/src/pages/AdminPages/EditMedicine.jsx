@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditMedicine = () => {
   const { id } = useParams();  
@@ -17,12 +18,10 @@ const EditMedicine = () => {
   });
 
   useEffect(() => {
-    // Fetch categories from backend
     axios.get('http://127.0.0.1:8000/api/category/')
       .then(response => setCategories(response.data))
       .catch(error => console.error('Error fetching categories:', error));
 
-    // Fetch existing medicine data
     const fetchMedicine = async () => {
       try {
         const res = await axios.get(`http://127.0.0.1:8000/medicine/${id}/`);
@@ -37,8 +36,8 @@ const EditMedicine = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
-        ...prevState,
-        [name]: value
+      ...prevState,
+      [name]: value
     }));
   };
 
@@ -66,10 +65,9 @@ const EditMedicine = () => {
 
       if (response.status === 200) {
         toast.success('Medicine updated successfully');
-        setFormData({ medicine_name: '', price: '', description: '', image: null, Category: '' });
         setTimeout(() => {
           navigate('/medicineadmin/medicinelist');
-        }, 3000);
+        }, 2000);
       } else {
         toast.error('Failed to update medicine');
       }
@@ -80,67 +78,77 @@ const EditMedicine = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-blue-50 p-6">
       <ToastContainer theme="colored" position="top-center" />
-      <section className="ml-60">
-        <div className="flex justify-between mb-5 -mt-80">
-          <h2 className="text-2xl mx-3 font-bold">Edit Medicine</h2>
-          <h2 className="text-xl font-bold">
-            Dashboard/ <span className="text-green-600">Edit medicine</span>
-          </h2>
+      
+      <div className="max-w-4xl mx-auto mr-25">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6 rounded-t-xl">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+            <h1 className="text-2xl font-bold text-white">Edit Medicine Details</h1>
+            <div className="flex items-center space-x-2 mt-4 md:mt-0">
+              <span className="text-blue-200">Dashboard</span>
+              <span className="text-white">/</span>
+              <span className="text-white font-semibold">Edit Medicine</span>
+            </div>
+          </div>
         </div>
+
+        {/* Form */}
         <form
-          className="space-y-6 px-4 max-w-sm mx-auto font-[sans-serif] shadow-lg shadow-blue-300"
           onSubmit={updateMedicine}
+          className="space-y-6 p-8 bg-white rounded-b-xl shadow-xl shadow-blue-200 border border-blue-100"
         >
-          <div className="flex items-center">
-            <label className="text-gray-400 w-36 text-sm" htmlFor="medicine_name">
-              Medicine Name
-            </label>
+          {/* Medicine Name */}
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Medicine Name</label>
             <input
               type="text"
               name="medicine_name"
-              placeholder="Enter Medicine Name"
+              placeholder="Enter medicine name"
               onChange={handleChange}
               value={formData.medicine_name}
-              className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black"
+              className="px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
             />
           </div>
 
-          <div className="flex items-center">
-            <label className="text-gray-400 w-36 text-sm" htmlFor="price">
-              Price
-            </label>
+          {/* Price */}
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Price (Rs.)</label>
             <input
               type="number"
               name="price"
-              placeholder="Enter Price"
+              placeholder="Enter price"
               onChange={handleChange}
               value={formData.price}
-              className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black"
+              className="px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
             />
           </div>
 
-          <div className="flex items-center">
-            <label className="text-gray-400 w-36 text-sm" htmlFor="description">
-              Description
-            </label>
-            <input
-              type="text"
+          {/* Description */}
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Description</label>
+            <textarea
               name="description"
-              placeholder="Enter Description"
+              placeholder="Enter description"
               onChange={handleChange}
               value={formData.description}
-              className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black"
+              className="px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              rows="4"
+              required
             />
           </div>
 
-          <div>
-            <label>Category:</label>
+          {/* Category */}
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Category</label>
             <select
               name="Category"
               value={formData.Category}
               onChange={handleChange}
+              className="px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             >
               <option value="">Select a category</option>
@@ -152,28 +160,34 @@ const EditMedicine = () => {
             </select>
           </div>
 
-          <div className="flex items-center">
-            <label className="text-gray-400 w-36 text-sm" htmlFor="image">
-              Image
-            </label>
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white text-black"
-            />
+          {/* Image Upload */}
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Medicine Image</label>
+            <div className={`px-4 py-3 border border-blue-200 rounded-lg ${formData.image ? 'bg-blue-50' : ''}`}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              {formData.image && (
+                <p className="mt-2 text-sm text-blue-600">
+                  {typeof formData.image === 'string' ? 'Current image' : formData.image.name}
+                </p>
+              )}
+            </div>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="!mt-8 px-6 py-2 w-full bg-green-400 hover:bg-[#444] text-sm text-white mx-auto block"
+            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 shadow-md hover:shadow-lg"
           >
             Update Medicine
           </button>
         </form>
-      </section>
-    </>
+      </div>
+    </div>
   );
 };
 

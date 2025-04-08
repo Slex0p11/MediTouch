@@ -6,20 +6,19 @@ import { toast, ToastContainer } from 'react-toastify';
 const MedicineList = () => {
   const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
-    // Fetch Medicines
     axios.get('http://127.0.0.1:8000/api/allmedicine')
       .then(res => setData(res.data))
       .catch(err => console.log(err.message));
 
-    // Fetch Categories
     axios.get('http://127.0.0.1:8000/api/category/')
       .then(res => setCategories(res.data))
       .catch(err => console.log(err.message));
   }, []);
 
-  // Function to get category_name from category id
   const getCategoryName = (categoryId) => {
     const category = categories.find(cat => cat.id === categoryId);
     return category ? category.category_name : "No Category";
@@ -38,54 +37,84 @@ const MedicineList = () => {
     }
   };
 
+  const filteredData = data.filter(item => {
+    const matchesSearch = item.medicine_name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || item.category === parseInt(selectedCategory);
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <>
       <ToastContainer theme='colored' position='top-center' />
-      <div className="overflow-x-auto shadow-md sm:rounded-lg ml-60">
-        <div className="flex justify-between mb-5 -mt-79">
-          <h2 className='text-2xl mx-3 font-bold text-blue-600'>Medicine List</h2>
-          <h2 className='text-xl font-bold'>Dashboard/ <span className='text-green-600'>medicine list</span></h2>
+      <div className="ml-60 mt-10 px-8 py-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold text-blue-700">Medicine List</h2>
+          <p className="text-sm text-gray-500">
+            Dashboard / <span className="text-blue-600 font-semibold">Medicine List</span>
+          </p>
         </div>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 my-9">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">Id</th>
-              <th scope="col" className="px-6 py-3">Medicine name</th>
-              <th scope="col" className="px-6 py-3">Image</th>
-              <th scope="col" className="px-6 py-3">Description</th>
-              <th scope="col" className="px-6 py-3">Price</th>
-              <th scope="col" className="px-6 py-3">Category</th>
-              <th scope="col" className="px-6 py-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((items) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={items.id}>
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {items.id}
-                </th>
-                <td className="px-6 py-4">{items.medicine_name}</td>
-                <td className="px-6 py-4">
-                  <img src={items.image} alt={items.medicine_name} className="w-16 h-16 object-cover" />
-                </td>
-                <td className="px-6 py-4">{items.description}</td>
-                <td className="px-6 py-4">Rs. {items.price}</td>
-                <td className="px-6 py-4">
-                  {getCategoryName(items.category)} {/* Updated from 'Category' to 'category' */}
-                </td>
-                <td className="px-6 py-4">
-                  <Link to={`/medicineadmin/editmedicine/${items.id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    Edit
-                  </Link>
-                  &nbsp; &nbsp;
-                  <Link to="#" className="font-medium text-blue-600 dark:text-red-500 hover:underline" onClick={() => deleteContact(items.id)}>
-                    Delete
-                  </Link>
-                </td>
-              </tr>
+
+        {/* Search and Filter */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Search by medicine name..."
+            className="w-full sm:w-1/2 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full sm:w-1/4 px-4 py-2 border border-blue-300 rounded-xl text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="all">All Categories</option>
+            {categories.map(cat => (
+              <option key={cat.id} value={cat.id}>{cat.category_name}</option>
             ))}
-          </tbody>
-        </table>
+          </select>
+        </div>
+
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredData.map((items) => (
+            <div key={items.id} className="bg-white rounded-2xl shadow-md p-5 border border-blue-100">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-xl font-semibold text-blue-700">{items.medicine_name}</h3>
+                <span className="text-xs text-gray-500">ID: {items.id}</span>
+              </div>
+
+              <img
+                src={items.image}
+                alt={items.medicine_name}
+                className="w-full h-40 object-cover rounded-lg border border-blue-200 mb-4"
+              />
+
+              <p className="text-gray-600 text-sm mb-2"><span className="font-medium text-gray-700">Description:</span> {items.description}</p>
+              <p className="text-gray-600 text-sm mb-2"><span className="font-medium text-gray-700">Category:</span> {getCategoryName(items.category)}</p>
+              <p className="text-blue-700 font-bold mb-4">Price: Rs. {items.price}</p>
+
+              <div className="flex gap-3">
+                <Link
+                  to={`/medicineadmin/editmedicine/${items.id}`}
+                  className="bg-blue-500 text-white px-4 py-2 text-sm font-medium rounded w-full text-center hover:bg-blue-600 transition"
+                >
+                  Edit
+                </Link>
+                <button
+                  onClick={() => deleteContact(items.id)}
+                  className="bg-red-500 text-white px-4 py-2 text-sm font-medium rounded w-full text-center hover:bg-red-600 transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+          {filteredData.length === 0 && (
+            <p className="text-center col-span-full text-gray-500">No medicines found.</p>
+          )}
+        </div>
       </div>
     </>
   );

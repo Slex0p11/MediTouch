@@ -21,7 +21,6 @@ const AddMedicine = () => {
   });
 
   useEffect(() => {
-    // Fetch categories from the backend
     axios
       .get('http://127.0.0.1:8000/api/category/')
       .then((response) => {
@@ -121,53 +120,61 @@ const AddMedicine = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-blue-50 p-6">
       <ToastContainer theme="colored" position="top-center" />
-      <section className="ml-60 mt-1">
-        <div className="flex justify-between mb-6">
-          <h2 className="text-2xl mx-3 font-bold text-blue-600">Add Medicine</h2>
-          <h2 className="text-xl font-bold">
-            Dashboard/ <span className="text-green-600">Add Medicine</span>
-          </h2>
+      
+      <div className="max-w-4xl mx-auto mr-25">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6 rounded-t-xl">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+            <h1 className="text-2xl font-bold text-white">Add New Medicine</h1>
+            <div className="flex items-center space-x-2 mt-4 md:mt-0">
+              <span className="text-blue-200">Dashboard</span>
+              <span className="text-white">/</span>
+              <span className="text-white font-semibold">Add Medicine</span>
+            </div>
+          </div>
         </div>
+
+        {/* Form */}
         <form
-          className="space-y-6 px-8 py-6 max-w-2xl mx-auto bg-white rounded-lg shadow-lg shadow-blue-100 border border-gray-100"
+          className="space-y-6 p-8 bg-white rounded-b-xl shadow-xl shadow-blue-200 border border-blue-100"
           onSubmit={handleSubmit}
         >
           {/* Medicine Name */}
-          <div className="flex flex-col">
-            <label className="text-gray-600 text-sm font-medium mb-1">Medicine Name</label>
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Medicine Name</label>
             <input
               type="text"
               name="medicine_name"
-              placeholder="Enter the name"
+              placeholder="Enter medicine name"
               onChange={handleChange}
               value={product.medicine_name}
-              className={`px-4 py-2 border ${errors.medicine_name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+              className={`px-4 py-3 border ${errors.medicine_name ? 'border-red-500' : 'border-blue-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
             />
           </div>
 
           {/* Price */}
-          <div className="flex flex-col">
-            <label className="text-gray-600 text-sm font-medium mb-1">Price</label>
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Price (Rs.)</label>
             <input
               type="number"
               name="price"
-              placeholder="Enter the Price"
+              placeholder="Enter price"
               onChange={handleChange}
               value={product.price}
-              className={`px-4 py-2 border ${errors.price ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+              className={`px-4 py-3 border ${errors.price ? 'border-red-500' : 'border-blue-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
             />
           </div>
 
           {/* Category */}
-          <div className="flex flex-col">
-            <label className="text-gray-600 text-sm font-medium mb-1">Category</label>
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Category</label>
             <select
               name="category"
               onChange={handleChange}
               value={product.category}
-              className={`px-4 py-2 border ${errors.category ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+              className={`px-4 py-3 border ${errors.category ? 'border-red-500' : 'border-blue-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
             >
               <option value="">Select a category</option>
               {categories.map((category) => (
@@ -179,39 +186,44 @@ const AddMedicine = () => {
           </div>
 
           {/* Description */}
-          <div className="flex flex-col">
-            <label className="text-gray-600 text-sm font-medium mb-1">Description</label>
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Description</label>
             <textarea
               name="description"
-              placeholder="Enter the Description"
+              placeholder="Enter description"
               onChange={handleChange}
               value={product.description}
-              className={`px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none`}
+              className={`px-4 py-3 border ${errors.description ? 'border-red-500' : 'border-blue-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none`}
               rows="4"
             ></textarea>
           </div>
 
           {/* Medicine Image */}
-          <div className="flex flex-col">
-            <label className="text-gray-600 text-sm font-medium mb-1">Medicine Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+          <div className="flex flex-col space-y-2">
+            <label className="text-blue-800 font-medium">Medicine Image</label>
+            <div className={`px-4 py-3 border border-blue-200 rounded-lg ${product.image ? 'bg-blue-50' : ''}`}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              {product.image && (
+                <p className="mt-2 text-sm text-blue-600">{product.image.name}</p>
+              )}
+            </div>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition duration-200"
+            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 shadow-md hover:shadow-lg"
           >
             Add Medicine
           </button>
         </form>
-      </section>
-    </>
+      </div>
+    </div>
   );
 };
 

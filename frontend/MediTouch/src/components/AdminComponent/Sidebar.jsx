@@ -3,224 +3,213 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <>
-      <nav className="bg-[#F5F5DC] shadow-lg h-screen fixed top-0 left-0 min-w-[250px] py-6 px-4 font-[sans-serif] overflow-auto">
-        <Link to="">
+    <nav className="bg-gradient-to-b from-blue-800 to-blue-900 h-screen fixed top-0 left-0 w-64 py-6 px-4 overflow-auto shadow-2xl">
+      {/* Logo */}
+      <div className="flex items-center justify-center mb-8">
+        <Link to="/">
           <img
             src="https://i.imgur.com/Pul2AD6.png"
             alt="logo"
-            className="w-[160px]"
+            className="w-40 filter brightness-0 invert"
           />
         </Link>
+      </div>
 
-        <ul className="mt-6">
-          <li>
-            <Link
-              to="/medicineadmin/dashboard"
-              className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
+      {/* Main Menu */}
+      <div className="space-y-1">
+        <Link
+          to="/medicineadmin/dashboard"
+          className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+          <span className="font-medium">Dashboard</span>
+        </Link>
+      </div>
+
+      {/* Medicine Section */}
+      <div className="mt-8">
+        <h3 className="text-xs font-semibold text-blue-300 uppercase tracking-wider px-4 mb-3">
+          Medicine Management
+        </h3>
+        <div className="space-y-1">
+          <Link
+            to="/medicineadmin/medicinelist"
+            className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+              viewBox="0 0 20 20"
+              fill="currentColor"
             >
-              <svg
-                xmlns=""
-                fill="currentColor"
-                className="w-[18px] h-[18px] mr-4"
-                viewBox="0 0 512 512"
-              >
-                <path
-                  d="M197.332 170.668h-160C16.746 170.668 0 153.922 0 133.332v-96C0 16.746 16.746 0 37.332 0h160c20.59 0 37.336 16.746 37.336 37.332v96c0 20.59-16.746 37.336-37.336 37.336zM37.332 32A5.336 5.336 0 0 0 32 37.332v96a5.337 5.337 0 0 0 5.332 5.336h160a5.338 5.338 0 0 0 5.336-5.336v-96A5.337 5.337 0 0 0 197.332 32zm160 480h-160C16.746 512 0 495.254 0 474.668v-224c0-20.59 16.746-37.336 37.332-37.336h160c20.59 0 37.336 16.746 37.336 37.336v224c0 20.586-16.746 37.332-37.336 37.332zm-160-266.668A5.337 5.337 0 0 0 32 250.668v224A5.336 5.336 0 0 0 37.332 480h160a5.337 5.337 0 0 0 5.336-5.332v-224a5.338 5.338 0 0 0-5.336-5.336zM474.668 512h-160c-20.59 0-37.336-16.746-37.336-37.332v-96c0-20.59 16.746-37.336 37.336-37.336h160c20.586 0 37.332 16.746 37.332 37.336v96C512 495.254 495.254 512 474.668 512zm-160-138.668a5.338 5.338 0 0 0-5.336 5.336v96a5.337 5.337 0 0 0 5.336 5.332h160a5.336 5.336 0 0 0 5.332-5.332v-96a5.337 5.337 0 0 0-5.332-5.336zm160-74.664h-160c-20.59 0-37.336-16.746-37.336-37.336v-224C277.332 16.746 294.078 0 314.668 0h160C495.254 0 512 16.746 512 37.332v224c0 20.59-16.746 37.336-37.332 37.336zM314.668 32a5.337 5.337 0 0 0-5.336 5.332v224a5.338 5.338 0 0 0 5.336 5.336h160a5.337 5.337 0 0 0 5.332-5.336v-224A5.336 5.336 0 0 0 474.668 32zm0 0"
-                  data-original="#000000"
-                />
-              </svg>
-              <span>Dashboard</span>
-            </Link>
-          </li>
-        </ul>
+              <path
+                fillRule="evenodd"
+                d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Medicine List</span>
+          </Link>
 
-        <div className="mt-6">
-          <h6 className="text-blue-600 text-sm font-bold px-4">Medicine</h6>
-          <ul className="mt-3">
-            <li>
-              <Link
-                to="/medicineadmin/medicinelist"
-                className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
-              >
-                <svg
-                  xmlns=""
-                  fill="currentColor"
-                  className="w-[18px] h-[18px] mr-4"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    d="M437.02 74.98C388.668 26.63 324.379 0 256 0S123.332 26.629 74.98 74.98C26.63 123.332 0 187.621 0 256s26.629 132.668 74.98 181.02C123.332 485.37 187.621 512 256 512s132.668-26.629 181.02-74.98C485.37 388.668 512 324.379 512 256s-26.629-132.668-74.98-181.02zM111.105 429.297c8.454-72.735 70.989-128.89 144.895-128.89 38.96 0 75.598 15.179 103.156 42.734 23.281 23.285 37.965 53.687 41.742 86.152C361.641 462.172 311.094 482 256 482s-105.637-19.824-144.895-52.703zM256 269.507c-42.871 0-77.754-34.882-77.754-77.753C178.246 148.879 213.13 114 256 114s77.754 34.879 77.754 77.754c0 42.871-34.883 77.754-77.754 77.754zm170.719 134.427a175.9 175.9 0 0 0-46.352-82.004c-18.437-18.438-40.25-32.27-64.039-40.938 28.598-19.394 47.426-52.16 47.426-89.238C363.754 132.34 315.414 84 256 84s-107.754 48.34-107.754 107.754c0 37.098 18.844 69.875 47.465 89.266-21.887 7.976-42.14 20.308-59.566 36.542-25.235 23.5-42.758 53.465-50.883 86.348C50.852 364.242 30 312.512 30 256 30 131.383 131.383 30 256 30s226 101.383 226 226c0 56.523-20.86 108.266-55.281 147.934zm0 0"
-                    data-original="#000000"
-                  />
-                </svg>
-                <span>Medicine List</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/medicineadmin/addmedicine"
-                className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
-              >
-                <svg
-                  xmlns=""
-                  fill="currentColor"
-                  className="w-[18px] h-[18px] mr-4"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M18 2c2.206 0 4 1.794 4 4v12c0 2.206-1.794 4-4 4H6c-2.206 0-4-1.794-4-4V6c0-2.206 1.794-4 4-4zm0-2H6a6 6 0 0 0-6 6v12a6 6 0 0 0 6 6h12a6 6 0 0 0 6-6V6a6 6 0 0 0-6-6z"
-                    data-original="#000000"
-                  />
-                  <path
-                    d="M12 18a1 1 0 0 1-1-1V7a1 1 0 0 1 2 0v10a1 1 0 0 1-1 1z"
-                    data-original="#000000"
-                  />
-                  <path
-                    d="M6 12a1 1 0 0 1 1-1h10a1 1 0 0 1 0 2H7a1 1 0 0 1-1-1z"
-                    data-original="#000000"
-                  />
-                </svg>
-                <span>Add Medicine</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/medicineadmin/categorylist"
-                className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
-              >
-                <svg
-                  xmlns=""
-                  fill="currentColor"
-                  className="w-[18px] h-[18px] mr-4"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    d="M437.02 74.98C388.668 26.63 324.379 0 256 0S123.332 26.629 74.98 74.98C26.63 123.332 0 187.621 0 256s26.629 132.668 74.98 181.02C123.332 485.37 187.621 512 256 512s132.668-26.629 181.02-74.98C485.37 388.668 512 324.379 512 256s-26.629-132.668-74.98-181.02zM111.105 429.297c8.454-72.735 70.989-128.89 144.895-128.89 38.96 0 75.598 15.179 103.156 42.734 23.281 23.285 37.965 53.687 41.742 86.152C361.641 462.172 311.094 482 256 482s-105.637-19.824-144.895-52.703zM256 269.507c-42.871 0-77.754-34.882-77.754-77.753C178.246 148.879 213.13 114 256 114s77.754 34.879 77.754 77.754c0 42.871-34.883 77.754-77.754 77.754zm170.719 134.427a175.9 175.9 0 0 0-46.352-82.004c-18.437-18.438-40.25-32.27-64.039-40.938 28.598-19.394 47.426-52.16 47.426-89.238C363.754 132.34 315.414 84 256 84s-107.754 48.34-107.754 107.754c0 37.098 18.844 69.875 47.465 89.266-21.887 7.976-42.14 20.308-59.566 36.542-25.235 23.5-42.758 53.465-50.883 86.348C50.852 364.242 30 312.512 30 256 30 131.383 131.383 30 256 30s226 101.383 226 226c0 56.523-20.86 108.266-55.281 147.934zm0 0"
-                    data-original="#000000"
-                  />
-                </svg>
-                <span>Category List</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/medicineadmin/addcategory"
-                className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
-              >
-                <svg
-                  xmlns=""
-                  fill="currentColor"
-                  className="w-[18px] h-[18px] mr-4"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M18 2c2.206 0 4 1.794 4 4v12c0 2.206-1.794 4-4 4H6c-2.206 0-4-1.794-4-4V6c0-2.206 1.794-4 4-4zm0-2H6a6 6 0 0 0-6 6v12a6 6 0 0 0 6 6h12a6 6 0 0 0 6-6V6a6 6 0 0 0-6-6z"
-                    data-original="#000000"
-                  />
-                  <path
-                    d="M12 18a1 1 0 0 1-1-1V7a1 1 0 0 1 2 0v10a1 1 0 0 1-1 1z"
-                    data-original="#000000"
-                  />
-                  <path
-                    d="M6 12a1 1 0 0 1 1-1h10a1 1 0 0 1 0 2H7a1 1 0 0 1-1-1z"
-                    data-original="#000000"
-                  />
-                </svg>
-                <span>Add Category</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/medicineadmin/medicineorders"
-                className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
-              >
-                <svg
-                  width="25"
-                  height="25"
-                  viewBox="0 0 1024 1024"
-                  className="icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M53.6 1023.2c-6.4 0-12.8-2.4-17.6-8-4.8-4.8-7.2-11.2-6.4-18.4L80 222.4c.8-12.8 11.2-22.4 24-22.4h211.2v-3.2c0-52.8 20.8-101.6 57.6-139.2C410.4 21.6 459.2.8 512 .8c108 0 196.8 88 196.8 196.8 0 .8-.8 1.6-.8 2.4v.8h212c12.8 0 23.2 9.6 24 22.4L993.6 992c.8 2.4.8 4 .8 6.4-.8 13.6-11.2 24.8-24.8 24.8zm25.6-48H944l-46.4-726.4H708v57.6h.8c12.8 8.8 20 21.6 20 36 0 24.8-20 44.8-44.8 44.8s-44.8-20-44.8-44.8c0-14.4 7.2-27.2 20-36h.8v-57.6H363.2v57.6h.8c12.8 8.8 20 21.6 20 36 0 24.8-20 44.8-44.8 44.8s-44.8-20-44.8-44.8c0-14.4 7.2-27.2 20-36h.8v-57.6H125.6zM512 49.6c-81.6 0-148.8 66.4-148.8 148.8v3.2h298.4l-.8-1.6v-1.6c0-82.4-67.2-148.8-148.8-148.8" />
-                </svg>
-                <span>Medicine Orders</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
+          <Link
+            to="/medicineadmin/addmedicine"
+            className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Add Medicine</span>
+          </Link>
 
-        <div className="mt-6">
-          <h6 className="text-blue-600 text-sm font-bold px-4">Actions</h6>
-          <ul className="mt-3">
-             
-            <li>
-              <Link
-                to="/adminlogin"
-                className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
-              >
-                <svg
-                  xmlns=""
-                  fill="currentColor"
-                  className="w-[18px] h-[18px] mr-4"
-                  viewBox="0 0 6.35 6.35"
-                >
-                  <path
-                    d="M3.172.53a.265.266 0 0 0-.262.268v2.127a.265.266 0 0 0 .53 0V.798A.265.266 0 0 0 3.172.53zm1.544.532a.265.266 0 0 0-.026 0 .265.266 0 0 0-.147.47c.459.391.749.973.749 1.626 0 1.18-.944 2.131-2.116 2.131A2.12 2.12 0 0 1 1.06 3.16c0-.65.286-1.228.74-1.62a.265.266 0 1 0-.344-.404A2.667 2.667 0 0 0 .53 3.158a2.66 2.66 0 0 0 2.647 2.663 2.657 2.657 0 0 0 2.645-2.663c0-.812-.363-1.542-.936-2.03a.265.266 0 0 0-.17-.066z"
-                    data-original="#000000"
-                  />
-                </svg>
-                <span>Logout</span>
-              </Link>
-            </li>
-          </ul>
+          <Link
+            to="/medicineadmin/categorylist"
+            className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M17 10a7 7 0 11-14 0 7 7 0 0114 0zm-7-3a3 3 0 00-3 3v1a1 1 0 01-1 1H5a1 1 0 000 2h1a1 1 0 011 1v1a3 3 0 006 0v-1a1 1 0 011-1h1a1 1 0 100-2h-1a1 1 0 01-1-1v-1a3 3 0 00-3-3z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Category List</span>
+          </Link>
+
+          <Link
+            to="/medicineadmin/addcategory"
+            className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Add Category</span>
+          </Link>
+
+          <Link
+            to="/medicineadmin/medicineorders"
+            className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+              <path
+                fillRule="evenodd"
+                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Medicine Orders</span>
+          </Link>
         </div>
-        <div className="mt-6">
-          <h6 className="text-blue-600 text-sm font-bold px-4">Doctor</h6>
-          <ul className="mt-3">
-             
-            <li>
-              <Link
-                to="/medicineadmin/viewdoctor"
-                className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
-              >
-                <svg
-                  xmlns=""
-                  fill="currentColor"
-                  className="w-[18px] h-[18px] mr-4"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    d="M3.172.53a.265.266 0 0 0-.262.268v2.127a.265.266 0 0 0 .53 0V.798A.265.266 0 0 0 3.172.53zm1.544.532a.265.266 0 0 0-.026 0 .265.266 0 0 0-.147.47c.459.391.749.973.749 1.626 0 1.18-.944 2.131-2.116 2.131A2.12 2.12 0 0 1 1.06 3.16c0-.65.286-1.228.74-1.62a.265.266 0 1 0-.344-.404A2.667 2.667 0 0 0 .53 3.158a2.66 2.66 0 0 0 2.647 2.663 2.657 2.657 0 0 0 2.645-2.663c0-.812-.363-1.542-.936-2.03a.265.266 0 0 0-.17-.066z"
-                    data-original="#000000"
-                  />
-                </svg>
-                <span>Register Doctor</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/medicineadmin/approveddoctors"
-                className="text-black hover:text-blue-600 text-sm flex items-center hover:bg-blue-50 rounded px-4 py-3 transition-all"
-              >
-                <svg
-                  xmlns=""
-                  fill="currentColor"
-                  className="w-[18px] h-[18px] mr-4"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    d="M3.172.53a.265.266 0 0 0-.262.268v2.127a.265.266 0 0 0 .53 0V.798A.265.266 0 0 0 3.172.53zm1.544.532a.265.266 0 0 0-.026 0 .265.266 0 0 0-.147.47c.459.391.749.973.749 1.626 0 1.18-.944 2.131-2.116 2.131A2.12 2.12 0 0 1 1.06 3.16c0-.65.286-1.228.74-1.62a.265.266 0 1 0-.344-.404A2.667 2.667 0 0 0 .53 3.158a2.66 2.66 0 0 0 2.647 2.663 2.657 2.657 0 0 0 2.645-2.663c0-.812-.363-1.542-.936-2.03a.265.266 0 0 0-.17-.066z"
-                    data-original="#000000"
-                  />
-                </svg>
-                <span>Approved Doctor</span>
-              </Link>
-            </li>
-          </ul>
+      </div>
+
+      {/* Doctor Section */}
+      <div className="mt-8">
+        <h3 className="text-xs font-semibold text-blue-300 uppercase tracking-wider px-4 mb-3">
+          Doctor Management
+        </h3>
+        <div className="space-y-1">
+          <Link
+            to="/medicineadmin/viewdoctor"
+            className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Register Doctor</span>
+          </Link>
+
+          <Link
+            to="/medicineadmin/approveddoctors"
+            className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Approved Doctors</span>
+          </Link>
         </div>
-      </nav>
-    </>
+      </div>
+
+      {/* Actions Section */}
+      <div className="mt-8">
+        <h3 className="text-xs font-semibold text-blue-300 uppercase tracking-wider px-4 mb-3">
+          Account
+        </h3>
+        <div className="space-y-1">
+          <Link
+            to="/adminlogin"
+            className="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-700 rounded-lg transition-all group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-3 text-blue-300 group-hover:text-white"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Logout</span>
+          </Link>
+        </div>
+      </div>
+    </nav>
   );
 };
 
