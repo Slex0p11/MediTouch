@@ -33,15 +33,29 @@ class LoginUser(APIView):
         user = authenticate(request, email=email, password=password)
 
         if user:
+            # Check if user is approved (active)
+            if not user.is_active:
+                if user.is_doctor:
+                    return Response({
+                        "error": "Your account is pending approval. Please wait for admin approval."
+                    }, status=status.HTTP_403_FORBIDDEN)
+                return Response({
+                    "error": "Your account is inactive."
+                }, status=status.HTTP_403_FORBIDDEN)
+                
             refreshtoken = RefreshToken.for_user(user)
-            user_data = RegisterSerializer(user).data  # Serialize user data
+            user_data = RegisterSerializer(user).data
+            
+            # Add role information to the response
+            role = "doctor" if user.is_doctor else ("admin" if user.is_admin else "user")
+            user_data['role'] = role
+            
             return Response({
-                "user": user_data,  # Send all user details
+                "user": user_data,
                 "refreshtoken": str(refreshtoken),
                 "accesstoken": str(refreshtoken.access_token),
             })
-        return Response({"error": "Invalid Credentials"}, status=400)
-
+        return Response({"error": "Invalid Credentials"}, status=status.HTTP_400_BAD_REQUEST)
 # Medicine Views
 
 class AllMedicine(generics.ListAPIView):
@@ -388,3 +402,58 @@ class DoctorDetailView(APIView):
             return Response(serializer.data)
         except Doctor.DoesNotExist:
             return Response({'error': 'Doctor not found'}, status=404)
+        
+class DoctorDashboard(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        if not request.user.is_doctor:
+            return Response({"error": "Only doctors can access this endpoint"}, 
+                           status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            doctor_profile = request.user.doctor_profile
+            appointments = Appointment.objects.filter(doctor=doctor_profile)
+            
+            data = {
+                "doctor": DoctorSerializer(doctor_profile).data,
+                "appointments": AppointmentSerializer(appointments, many=True).data,
+                "total_appointments": appointments.count(),
+                "pending_appointments": appointments.filter(is_confirmed=False).count()
+            }
+            return Response(data)
+        except Doctor.DoesNotExist:
+            return Response({"error": "Doctor profile not found"}, 
+                        status=status.HTTP_404_NOT_FOUND)
+
+class DoctorAppointments(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        if not request.user.is_doctor:
+            return Response({"error": "Only doctors can access this endpoint"}, 
+                           status=status.HTTP_403_FORBIDDEN)
+        
+        appointments = Appointment.objects.filter(doctor=request.user.doctor_profile)
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
+    
+    def patch(self, request, appointment_id):
+        if not request.user.is_doctor:
+            return Response({"error": "Only doctors can access this endpoint"}, 
+                           status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            appointment = Appointment.objects.get(
+                id=appointment_id,
+                doctor=request.user.doctor_profile
+            )
+        except Appointment.DoesNotExist:
+            return Response({"error": "Appointment not found"}, 
+                          status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = AppointmentSerializer(appointment, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

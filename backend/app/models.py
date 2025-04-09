@@ -14,6 +14,7 @@ class CustomUser(AbstractUser):
     is_admin = models.BooleanField(default=False)
     is_user = models.BooleanField(default=True)
     is_doctor=models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)  
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     dob = models.DateField()
 
@@ -22,6 +23,17 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+    def save(self, *args, **kwargs):
+        # For doctors, set is_active based on approval status
+        if self.is_doctor:
+            try:
+                doctor_profile = self.doctor_profile
+                self.is_active = doctor_profile.is_verified
+            except Doctor.DoesNotExist:
+                pass
+        super().save(*args, **kwargs)
+
 
 # Create your models here.
 class Category(models.Model):
