@@ -17,23 +17,27 @@ const DoctorLogin = () => {
     setError("");
     
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/doctors/login/", {
+      const response = await axios.post("http://127.0.0.1:8000/api/doctor/login/", {
         email: data.email,
         password: data.password,
       });
 
-      if (response.status === 200) {
-        // Store tokens and user data
+      if (response.data && response.data.access) {
+        // Store tokens and user data with correct property names
         localStorage.setItem("accessToken", response.data.access);
         localStorage.setItem("refreshToken", response.data.refresh);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         
         // Redirect to doctor dashboard
-        navigate("/doctor-dashboard");
+        navigate("/doctor/dashboard");
       }
     } catch (error) {
-      console.error("Login error:", error.response?.data || error.message);
-      setError(error.response?.data?.detail || "Invalid credentials or account not approved");
+      console.error("Login error:", error);
+      // Handle different error response structures
+      const errorMessage = error.response?.data?.error || 
+                         error.response?.data?.detail || 
+                         "Invalid credentials or account not approved";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -110,8 +114,6 @@ const DoctorLogin = () => {
                 )}
               </div>
 
-               
-
               <div className="!mt-6">
                 <button
                   type="submit"
@@ -131,21 +133,8 @@ const DoctorLogin = () => {
               </div>
             </form>
 
-            <div className="mt-6 text-center text-sm">
-              <p className="text-gray-600">
-                Not registered yet?{" "}
-                <a 
-                  href="/registerdoctor" 
-                  className="text-blue-600 hover:underline font-medium"
-                >
-                  Create doctor account
-                </a>
-              </p>
-            </div>
+             
           </div>
-
-           
-           
         </div>
       </div>
     </div>

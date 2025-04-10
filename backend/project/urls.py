@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
+    TokenVerifyView
 )
 
 urlpatterns = [
@@ -61,6 +62,7 @@ urlpatterns = [
     # Token Authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
 
     #Appointment
@@ -71,9 +73,14 @@ urlpatterns = [
     path('api/admin/doctors/approved/', ApprovedDoctorsView.as_view(), name='approved-doctors'),
     path('appointments/create/', CreateAppointmentAPIView.as_view(), name='create-appointment'),
     path('doctor/<int:id>/', DoctorDetailView.as_view(), name='doctor-detail'),
-    path('api/doctor/dashboard/', DoctorDashboard.as_view(), name='doctor-dashboard'),
-    path('api/doctor/appointments/', DoctorAppointments.as_view(), name='doctor-appointments'),
-    path('api/doctor/appointments/<int:appointment_id>/', DoctorAppointments.as_view(), name='update-appointment'),
+    path('api/doctor/login/', DoctorLoginView.as_view(), name='doctor-login'),
+    
+    # Doctor Profile
+    path('api/doctor/profile/', DoctorProfileView.as_view(), name='doctor-profile'),
+    
+    # Doctor Dashboard
+    path('api/doctor/dashboard/', DoctorDashboardView.as_view(), name='doctor-dashboard'),
+
 ]
 
 # Serve media files in development mode

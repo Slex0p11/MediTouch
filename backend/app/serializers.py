@@ -198,3 +198,30 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         fields = ['id', 'user', 'specialization', 'is_verified']
+
+class DoctorLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+class DoctorUserSerializer(serializers.ModelSerializer):
+    specialization = serializers.SerializerMethodField()
+    is_approved = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'email', 'first_name', 'last_name', 
+            'profile_picture', 'specialization', 'is_approved'
+        ]
+
+    def get_specialization(self, obj):
+        try:
+            return obj.doctor_profile.specialization
+        except Doctor.DoesNotExist:
+            return None
+
+    def get_is_approved(self, obj):
+        try:
+            return obj.doctor_profile.is_verified
+        except Doctor.DoesNotExist:
+            return False

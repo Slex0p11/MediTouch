@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/slices/cartSlice";
+
 import axios from "axios";
 import Header from "../../components/UserComponents/Header";
 import Footer from "../../components/UserComponents/Footer";
@@ -13,7 +12,7 @@ const Product = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const dispatch = useDispatch();
+   
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   useEffect(() => {
@@ -30,31 +29,7 @@ const Product = () => {
       });
   }, [id]);
 
-  const handleAddToCart = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        setShowLoginPrompt(true);
-        return;
-      }
-
-      await axios.post(
-        "http://127.0.0.1:8000/api/cart/add/",
-        { medicine_id: product.id, quantity },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      dispatch(addToCart({ medicine_id: product.id, quantity }));
-      alert("Added to cart successfully!");
-    } catch (error) {
-      console.error("Failed to add to cart", error.response);
-    }
-  };
+   
 
   const handleBuyNow = () => {
     const token = localStorage.getItem("accessToken");
@@ -145,12 +120,12 @@ const Product = () => {
                 >
                   Buy now
                 </button>
-                <button
+                {/* <button
                   onClick={handleAddToCart}
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                 >
                   Add to Cart
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

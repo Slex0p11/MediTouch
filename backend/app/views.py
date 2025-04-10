@@ -13,6 +13,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.mail import send_mail
 from .email import send_doctor_approval_email,send_doctor_rejection_email
+from django.utils import timezone 
 
 
 
@@ -403,57 +404,107 @@ class DoctorDetailView(APIView):
         except Doctor.DoesNotExist:
             return Response({'error': 'Doctor not found'}, status=404)
         
-class DoctorDashboard(APIView):
-    permission_classes = [IsAuthenticated]
+class DoctorLoginView(APIView):
+    def post(self, request):
+        serializer = DoctorLoginSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        
+        # Authenticate the user
+        user = authenticate(request, email=email, password=password)
+        
+        if not user:
+            return Response(
+                {"error": "Invalid credentials"}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        # Check if user is actually a doctor
+        if not user.is_doctor:
+            return Response(
+                {"error": "Only doctors can login here"}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Check if doctor is approved
+        try:
+            if not user.doctor_profile.is_verified:
+                return Response(
+                    {
+                        "error": "Your account is pending approval",
+                        "detail": "Please wait for admin approval before logging in"
+                    },
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        except Doctor.DoesNotExist:
+            return Response(
+                {"error": "Doctor profile not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Generate tokens
+        refresh = RefreshToken.for_user(user)
+        refresh['role'] = 'doctor'  # Add role claim to token
+        user_data = UserSerializer(user).data
+        
+        return Response({
+            "user": user_data,
+            "refresh": str(refresh),
+            "access": str(refresh.access_token), 
+            "role": "doctor"   
+        })
     
+class DoctorProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         if not request.user.is_doctor:
-            return Response({"error": "Only doctors can access this endpoint"}, 
-                           status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"error": "Only doctors can access this endpoint"},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
         try:
             doctor_profile = request.user.doctor_profile
-            appointments = Appointment.objects.filter(doctor=doctor_profile)
-            
-            data = {
-                "doctor": DoctorSerializer(doctor_profile).data,
-                "appointments": AppointmentSerializer(appointments, many=True).data,
-                "total_appointments": appointments.count(),
-                "pending_appointments": appointments.filter(is_confirmed=False).count()
-            }
-            return Response(data)
+            serializer = DoctorUserSerializer(request.user)
+            return Response(serializer.data)
         except Doctor.DoesNotExist:
-            return Response({"error": "Doctor profile not found"}, 
-                        status=status.HTTP_404_NOT_FOUND)
-
-class DoctorAppointments(APIView):
+            return Response(
+                {"error": "Doctor profile not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+class DoctorDashboardView(APIView):
     permission_classes = [IsAuthenticated]
-    
+    authentication_classes = [JWTAuthentication]
+
     def get(self, request):
         if not request.user.is_doctor:
-            return Response({"error": "Only doctors can access this endpoint"}, 
-                           status=status.HTTP_403_FORBIDDEN)
-        
-        appointments = Appointment.objects.filter(doctor=request.user.doctor_profile)
-        serializer = AppointmentSerializer(appointments, many=True)
-        return Response(serializer.data)
-    
-    def patch(self, request, appointment_id):
-        if not request.user.is_doctor:
-            return Response({"error": "Only doctors can access this endpoint"}, 
-                           status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"error": "Only doctors can access this endpoint"},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
         try:
-            appointment = Appointment.objects.get(
-                id=appointment_id,
-                doctor=request.user.doctor_profile
+            doctor = request.user.doctor_profile
+            appointments = Appointment.objects.filter(doctor=doctor)
+            
+            data = {
+                "doctor": DoctorSerializer(doctor).data,
+                "total_appointments": appointments.count(),
+                "pending_appointments": appointments.filter(is_confirmed=False).count(),
+                "upcoming_appointments": AppointmentSerializer(
+                    appointments.filter(date__gte=timezone.now().date()).order_by('date', 'time')[:5],
+                    many=True
+                ).data
+            }
+            
+            return Response(data)
+        except Doctor.DoesNotExist:
+            return Response(
+                {"error": "Doctor profile not found"},
+                status=status.HTTP_404_NOT_FOUND
             )
-        except Appointment.DoesNotExist:
-            return Response({"error": "Appointment not found"}, 
-                          status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = AppointmentSerializer(appointment, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
