@@ -82,6 +82,7 @@ class Order(models.Model):
 class Doctor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='doctor_profile')
     specialization = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     medical_license = models.FileField(upload_to='doctor_licenses/')
     degree_certificate = models.FileField(upload_to='doctor_certificates/')
     is_verified = models.BooleanField(default=False)
@@ -96,19 +97,23 @@ class Doctor(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name()} - {'Verified' if self.is_verified else 'Pending'}"
     
+from django.db import models
+from django.conf import settings
+
 class Appointment(models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date = models.DateField()
-    time = models.TimeField(null=True, blank=True)
-    reason = models.TextField(blank=True)
-
-    is_confirmed = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ['doctor', 'date', 'time']
-        ordering = ['-created_at']
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    email = models.EmailField()  # removed unique=True
+    weeks = models.IntegerField()  # renamed from Weeks
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    address = models.TextField()
+    phone = models.CharField(max_length=15)
+    image = models.URLField(blank=True, null=True)  # optional image field
+    status = models.CharField(max_length=50, default="Completed")
 
     def __str__(self):
-        return f"Appointment with Dr. {self.doctor.user.get_full_name()} on {self.date}"
+        return self.email

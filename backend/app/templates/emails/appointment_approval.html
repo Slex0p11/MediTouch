@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment Approved</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .email-container {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .header {
+            font-size: 24px;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <p class="header">Your Appointment Has Been Approved!</p>
+        <p>Dear {{ user_name }},</p>
+        <p>Your appointment request has been successfully approved.</p>
+        <p>Thank you for choosing our service.</p>
+        <br>
+        <p>Best regards,<br>The RHC Team</p>
+    </div>
+</body>
+</html>

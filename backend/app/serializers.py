@@ -152,6 +152,7 @@ class DoctorRegistrationSerializer(serializers.Serializer):
     
 class DoctorListSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source='user.first_name')
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     last_name = serializers.CharField(source='user.last_name')
     email = serializers.CharField(source='user.email')
     dob = serializers.DateField(source='user.dob')
@@ -165,6 +166,7 @@ class DoctorListSerializer(serializers.ModelSerializer):
         model = Doctor
         fields = [
             'id', 'first_name', 'last_name', 'email', 'dob',
+            'price',
             'specialization', 'license_url', 'degree_url',
             'is_verified', 'created_at','is_rejected', 
             'rejection_reason',
@@ -197,7 +199,7 @@ class DoctorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Doctor
-        fields = ['id', 'user', 'specialization', 'is_verified']
+        fields = ['id', 'user', 'specialization', 'price' 'is_verified']
 
 class DoctorLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()

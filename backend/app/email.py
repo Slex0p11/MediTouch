@@ -49,3 +49,18 @@ def send_doctor_rejection_email(doctor_email, doctor_name, rejection_reason):
     )
     email.attach_alternative(html_content, "text/html")
     email.send()
+
+
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.conf import settings
+
+def send_appointment_approval_email(user_email, user_name):
+    subject = 'Your Appointment Has Been Approved'
+    message = render_to_string('emails/appointment_approval.html', {
+        'user_name': user_name
+    })
+    
+    email = EmailMessage(subject, message, settings.DEFAULT_FROM_EMAIL, [user_email])
+    email.content_subtype = 'html'
+    email.send()

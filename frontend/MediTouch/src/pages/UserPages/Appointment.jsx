@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaCalendarAlt, FaUserMd, FaSearch, FaArrowRight, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
+import { FaUserMd, FaSearch, FaArrowRight, FaEnvelope, FaGraduationCap } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const Appointment = () => {
@@ -8,7 +8,6 @@ const Appointment = () => {
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -19,10 +18,15 @@ const Appointment = () => {
         const doctorsData = response.data.approved_doctors || [];
 
         const validatedDoctors = doctorsData.map(doctor => ({
-          ...doctor,
-          specialization: doctor.specialization || 'General'
+          id: doctor.id,
+          first_name: doctor.first_name,
+          last_name: doctor.last_name,
+          email: doctor.email,
+          specialization: doctor.specialization || 'General',
+          approved_date: doctor.approved_date,
+          price: doctor.price || 0  // <-- include price
         }));
-        
+
         setApprovedDoctors(validatedDoctors);
         setFilteredDoctors(validatedDoctors);
         setLoading(false);
@@ -38,25 +42,29 @@ const Appointment = () => {
 
   useEffect(() => {
     const results = approvedDoctors.filter(doctor => {
-      const firstName = doctor.first_name?.toLowerCase() || '';
-      const lastName = doctor.last_name?.toLowerCase() || '';
-      const specialization = doctor.specialization?.toLowerCase() || '';
-      
+      const search = searchTerm.toLowerCase();
       return (
-        firstName.includes(searchTerm.toLowerCase()) ||
-        lastName.includes(searchTerm.toLowerCase()) ||
-        specialization.includes(searchTerm.toLowerCase())
+        doctor.first_name?.toLowerCase().includes(search) ||
+        doctor.last_name?.toLowerCase().includes(search) ||
+        doctor.specialization.toLowerCase().includes(search)
       );
     });
     setFilteredDoctors(results);
   }, [searchTerm, approvedDoctors]);
 
-  const handleBookAppointment = (doctorId) => {
-    if (!selectedDate) {
-      alert('Please select a date first');
-      return;
-    }
-    navigate(`/book-appointment/${doctorId}?date=${selectedDate}`);
+  const handleBookAppointment = (doctor) => {
+    navigate('/form', {
+      state: {
+        doctor: {
+          id: doctor.id,
+          first_name: doctor.first_name,
+          last_name: doctor.last_name,
+          email: doctor.email,
+          specialization: doctor.specialization,
+          price: doctor.price
+        }
+      }
+    });
   };
 
   if (loading) {
@@ -87,11 +95,9 @@ const Appointment = () => {
           </p>
         </div>
 
-        {/* Search and date picker */}
-        <div className="mb-8 flex flex-col lg:flex-row gap-4 items-start lg:items-end">
-          {/* Search */}
+        <div className="mb-8">
           <div className="relative w-full">
-            <div className="absolute inset-y-0 right-10 pl-3 flex items-center pointer-events-none">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FaSearch className="text-gray-400" />
             </div>
             <input
@@ -100,20 +106,6 @@ const Appointment = () => {
               placeholder="Search doctors by name or specialty"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          {/* Date Picker */}
-          <div className="relative w-full sm:w-64">
-            <div className="absolute inset-y-0 right-10 pl-3 flex items-center pointer-events-none">
-              <FaCalendarAlt className="text-gray-400 right-20" />
-            </div>
-            <input
-              type="date"
-              className="block w-full pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
             />
           </div>
         </div>
@@ -129,32 +121,30 @@ const Appointment = () => {
                     </div>
                     <div className="ml-4">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Dr. {doctor.first_name || 'Unknown'} {doctor.last_name || ''}
+                        Dr. {doctor.first_name} {doctor.last_name}
                       </h3>
                       <p className="mt-1 text-sm text-blue-600">
-                        {doctor.specialization || 'General Practitioner'}
+                        {doctor.specialization}
                       </p>
                     </div>
                   </div>
                   <div className="mt-4">
                     <div className="flex items-center text-sm text-gray-500">
                       <FaEnvelope className="flex-shrink-0 mr-2" />
-                      <span>{doctor.email || 'Email not available'}</span>
+                      <span>{doctor.email}</span>
                     </div>
                     <div className="mt-2 flex items-center text-sm text-gray-500">
                       <FaGraduationCap className="flex-shrink-0 mr-2" />
                       <span>Verified Specialist</span>
                     </div>
-                    <div className="mt-2 flex items-center text-sm text-gray-500">
-                      <FaCalendarAlt className="flex-shrink-0 mr-2" />
-                      <span>Approved on: {new Date(doctor.approved_date).toLocaleDateString()}</span>
+                    <div className="mt-3 text-sm text-gray-700">
+                      <span className="font-medium text-gray-900">Consultation Fee:</span> ${doctor.price}
                     </div>
                   </div>
                   <div className="mt-5">
                     <button
-                      onClick={() => handleBookAppointment(doctor.id)}
-                      disabled={!selectedDate}
-                      className={`w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${selectedDate ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+                      onClick={() => handleBookAppointment(doctor)}
+                      className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                       Book Appointment <FaArrowRight className="ml-2" />
                     </button>

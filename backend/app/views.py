@@ -362,36 +362,7 @@ class ApprovedDoctorsView(generics.ListAPIView):
             'count': queryset.count(),
             'approved_doctors': serializer.data
         })
-    
-class CreateAppointmentAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        doctor_id = request.data.get('doctor')
-        date = request.data.get('date')
-        time = request.data.get('time')
-        reason = request.data.get('reason', '')
-
-        patient = request.user
-
-        try:
-            doctor = Doctor.objects.get(id=doctor_id)
-        except Doctor.DoesNotExist:
-            return Response({'error': 'Doctor not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-        # Prevent double booking (optional)
-        if Appointment.objects.filter(doctor=doctor, date=date, time=time).exists():
-            return Response({'error': 'Appointment already booked at this time.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        appointment = Appointment.objects.create(
-            doctor=doctor,
-            patient=patient,
-            date=date,
-            time=time,
-            reason=reason
-        )
-        serializer = AppointmentSerializer(appointment)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+ 
     
 class DoctorDetailView(APIView):
     permission_classes = [IsAuthenticated]
@@ -508,3 +479,71 @@ class DoctorDashboardView(APIView):
                 {"error": "Doctor profile not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
+        
+from rest_framework.generics import CreateAPIView
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.generics import CreateAPIView
+from .models import Appointment
+from .serializers import AppointmentSerializer
+from django.db import IntegrityError
+
+class AppointmentCreateView(CreateAPIView):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError as e:
+            return Response({"error": "Appointment could not be created. Possibly a duplicate or invalid data."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated  # Optional
+from .models import Appointment
+from .serializers import AppointmentSerializer
+
+class AppointmentListView(ListAPIView):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Appointment
+from .serializers import AppointmentSerializer
+from .email import send_appointment_approval_email
+
+
+class ApproveAppointmentView(APIView):
+    def post(self, request, pk):
+        try:
+            appointment = Appointment.objects.get(pk=pk)
+            appointment.status = "Approved"
+            appointment.save()
+
+            user = appointment.user
+            send_appointment_approval_email(
+                user_email=appointment.email,
+                user_name=f"{user.first_name} {user.last_name}" if user else "User"
+            )
+
+            return Response({"message": "Appointment approved and email sent."}, status=200)
+
+        except Appointment.DoesNotExist:
+            return Response({"error": "Appointment not found"}, status=404)
+
+class DeleteAppointmentView(APIView):
+    def delete(self, request, pk):
+        try:
+            appointment = Appointment.objects.get(pk=pk)
+            appointment.delete()
+            return Response({"message": "Appointment deleted."}, status=204)
+
+        except Appointment.DoesNotExist:
+            return Response({"error": "Appointment not found"}, status=404)

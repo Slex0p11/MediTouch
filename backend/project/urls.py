@@ -46,7 +46,11 @@ urlpatterns = [
     path('api/orders/', OrderListView.as_view(), name='order-list'),
     path('api/orders/<int:order_id>/delete/', OrderDeleteView.as_view(), name='delete_order'),
     path("order/", OrderCreateView.as_view(), name="create_order"),
-
+    path("appo/", AppointmentCreateView.as_view(), name="appo"),
+    path('appointments/', AppointmentListView.as_view(), name='appointment-list'),
+    path('appointments/<int:pk>/approve/', ApproveAppointmentView.as_view(), name='approve-appointment'),
+    path('appointments/<int:pk>/delete/', DeleteAppointmentView.as_view(), name='delete-appointment'),
+    
     # Category APIs
     path('api/category/', AllCategory.as_view(), name='categorylist'),
     path('createcategory/', createCategory.as_view(), name='createCategory'),
@@ -66,12 +70,12 @@ urlpatterns = [
 
 
     #Appointment
+
     path('api/doctors/register/', DoctorRegisterView.as_view(), name='doctor-register'),
     path('api/admin/doctors/pending/', PendingDoctorsView.as_view(), name='pending-doctors'),
     path('api/admin/doctors/approve/<int:doctor_id>/', ApproveDoctorView.as_view(), name='approve-doctor'),
     path('api/admin/doctors/reject/<int:doctor_id>/', RejectDoctorView.as_view(), name='reject-doctor'),
     path('api/admin/doctors/approved/', ApprovedDoctorsView.as_view(), name='approved-doctors'),
-    path('appointments/create/', CreateAppointmentAPIView.as_view(), name='create-appointment'),
     path('doctor/<int:id>/', DoctorDetailView.as_view(), name='doctor-detail'),
     path('api/doctor/login/', DoctorLoginView.as_view(), name='doctor-login'),
     

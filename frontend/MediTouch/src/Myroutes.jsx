@@ -37,6 +37,8 @@ import EditCategory from "./pages/AdminPages/EditCategory";
 import MedicineOrdered from "./pages/AdminPages/MedicineOrdered";
 import AdminDoctorsPanel from "./pages/AdminPages/AdminDoctorsPanel";
 import DoctorDashboard from "./pages/DoctorPages/DoctorDashboard";
+import AppointmentForm from "./pages/UserPages/AppointmentForm";
+import AppointmentList from "./pages/UserPages/AppointmentList";
 
 const Myroutes = () => {
   return (
@@ -58,7 +60,9 @@ const Myroutes = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/order" element={<Esewa />} />
-         
+        <Route path="/form" element={<AppointmentForm />} />
+        <Route path="/list" element={<AppointmentList />} />
+
         <Route path="/paymentsuccess" element={<PaymentSuccess />} />
 
         {/* ----------------- Doctor Routes ----------------- */}
