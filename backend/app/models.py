@@ -107,6 +107,7 @@ class Appointment(models.Model):
         null=True,
         blank=True
     )
+    
     email = models.EmailField()  # removed unique=True
     weeks = models.IntegerField()  # renamed from Weeks
     price = models.DecimalField(max_digits=10, decimal_places=2)

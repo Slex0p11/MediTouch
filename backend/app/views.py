@@ -460,24 +460,36 @@ class DoctorDashboardView(APIView):
             )
         
         try:
-            doctor = request.user.doctor_profile
-            appointments = Appointment.objects.filter(doctor=doctor)
+            doctor_profile = request.user.doctor_profile
+            appointments = Appointment.objects.filter(user=request.user)
+            
+            # Get today's date for filtering
+            today = timezone.now().date()
             
             data = {
-                "doctor": DoctorSerializer(doctor).data,
-                "total_appointments": appointments.count(),
-                "pending_appointments": appointments.filter(is_confirmed=False).count(),
+                "doctor": DoctorSerializer(doctor_profile).data,
+                "stats": {
+                    "total_appointments": appointments.count(),
+                    "pending_appointments": appointments.filter(status="Pending").count(),
+                    "completed_appointments": appointments.filter(status="Completed").count(),
+                },
                 "upcoming_appointments": AppointmentSerializer(
-                    appointments.filter(date__gte=timezone.now().date()).order_by('date', 'time')[:5],
+                    appointments.filter(date__gte=today).order_by('date', 'time')[:5],
                     many=True
                 ).data
             }
             
             return Response(data)
+            
         except Doctor.DoesNotExist:
             return Response(
-                {"error": "Doctor profile not found"},
+                {"error": "Doctor profile not found. Please complete your profile."},
                 status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
 from rest_framework.generics import CreateAPIView

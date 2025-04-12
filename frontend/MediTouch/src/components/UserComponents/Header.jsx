@@ -65,7 +65,7 @@ const Header = () => {
           />
         </Link>
 
-        <ul className="lg:flex gap-x-5 max-lg:space-y-3">
+        <ul className="lg:flex gap-x-12 max-lg:space-y-3">
           <li>
             <Link to="/" className="hover:text-[#FF0000] text-[#000000] font-semibold text-[15px]">
               Home
@@ -82,8 +82,8 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link to="/cart" className="hover:text-[#FF0000] text-[#000000] font-semibold text-[15px]">
-              Cart
+            <Link to="#" className="hover:text-[#FF0000] text-[#000000] font-semibold text-[15px]">
+              Contact Us
             </Link>
           </li>
           <li>

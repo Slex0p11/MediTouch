@@ -60,7 +60,7 @@ const AppointmentList = () => {
               <th className="border p-2">Email</th>
               <th className="border p-2">Weeks</th>
               <th className="border p-2">Price</th>
-              <th className="border p-2">Address</th>
+              <th className="border p-2">Reason</th>
               <th className="border p-2">Phone</th>
               <th className="border p-2">Status</th>
               <th className="border p-2">Actions</th>

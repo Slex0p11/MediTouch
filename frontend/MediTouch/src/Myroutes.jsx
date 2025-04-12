@@ -17,7 +17,7 @@ import PaymentSuccess from "./pages/UserPages/PaymentSuccess";
 import Pharmacy from "./pages/UserPages/Pharmacy";
 import ProfileScreen from "./pages/UserPages/ProfileScreen";
 import Appointment from "./pages/UserPages/Appointment";
-import BookAppointment from "./pages/UserPages/BookAppointment";
+ 
 
 // Doctor Pages
 import RegisterDoc from "./pages/DoctorPages/RegisterDoc";
@@ -68,7 +68,7 @@ const Myroutes = () => {
         {/* ----------------- Doctor Routes ----------------- */}
         <Route path="/registerdoctor" element={<RegisterDoc />} />
         <Route path="/doctorlogin" element={<DoctorLogin />} />
-        <Route path="/book-appointment/:id" element={<BookAppointment />} />
+         
         <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
         
 

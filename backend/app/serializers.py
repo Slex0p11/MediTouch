@@ -116,6 +116,7 @@ class DoctorRegistrationSerializer(serializers.Serializer):
     license_file = serializers.FileField()
     degree_file = serializers.FileField()
     specialization = serializers.CharField(max_length=100)
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     def create(self, validated_data):
         # Generate unique username from email
@@ -146,7 +147,9 @@ class DoctorRegistrationSerializer(serializers.Serializer):
             user=user,
             medical_license=validated_data['license_file'],
             degree_certificate=validated_data['degree_file'],
-            specialization=validated_data['specialization']
+            specialization=validated_data['specialization'],
+            price=validated_data['price'],
+              
         )
         return doctor
     
@@ -199,7 +202,7 @@ class DoctorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Doctor
-        fields = ['id', 'user', 'specialization', 'price' 'is_verified']
+        fields = ['id', 'user', 'specialization', 'price', 'is_verified']
 
 class DoctorLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()

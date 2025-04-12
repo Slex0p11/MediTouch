@@ -26,14 +26,18 @@ const Register = () => {
     if (data.profile_picture[0]) {
       formData.append("profile_picture", data.profile_picture[0]);
     }
-  
+
     try {
-      const response = await axios.post("http://127.0.0.1:8000/register/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-  
+      const response = await axios.post(
+        "http://127.0.0.1:8000/register/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       alert("Registration successful! Please log in.");
       console.log(response.data);
       navigate("/login");
@@ -41,7 +45,9 @@ const Register = () => {
     } catch (error) {
       console.error(error.response?.data || "Error occurred");
       if (error.response?.data) {
-        const errorMessages = Object.values(error.response.data).flat().join("\n");
+        const errorMessages = Object.values(error.response.data)
+          .flat()
+          .join("\n");
         alert(`Error: ${errorMessages}`);
       } else {
         alert("Error during registration. Please try again.");
@@ -73,7 +79,9 @@ const Register = () => {
                 First Name
               </label>
               <input
-                {...register("first_name", { required: "First name is required" })}
+                {...register("first_name", {
+                  required: "First name is required",
+                })}
                 type="text"
                 className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3 rounded focus:bg-white outline-blue-500 transition-all"
                 placeholder="Enter first name"
@@ -91,7 +99,9 @@ const Register = () => {
                 Last Name
               </label>
               <input
-                {...register("last_name", { required: "Last name is required" })}
+                {...register("last_name", {
+                  required: "Last name is required",
+                })}
                 type="text"
                 className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3 rounded focus:bg-white outline-blue-500 transition-all"
                 placeholder="Enter last name"
@@ -137,22 +147,48 @@ const Register = () => {
                 placeholder="Enter email"
               />
               {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
             {/* Date of Birth */}
-            <div>
+            <div className="relative">
               <label className="text-gray-600 text-sm mb-2 block">
                 Date of Birth
               </label>
-              <input
-                {...register("dob", { required: "Date of birth is required" })}
-                type="date"
-                className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3 rounded focus:bg-white outline-blue-500 transition-all"
-              />
+              <div className="relative">
+                <input
+                  {...register("dob", {
+                    required: "Date of birth is required",
+                  })}
+                  type="date"
+                  className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3 rounded focus:bg-white outline-blue-500 transition-all appearance-none"
+                  max={new Date().toISOString().split("T")[0]} // Prevent future dates
+                />
+                {/* Calendar icon - only shows when browser doesn't support native picker */}
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </span>
+              </div>
               {errors.dob && (
-                <p className="text-red-500 text-xs mt-1">{errors.dob.message}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.dob.message}
+                </p>
               )}
             </div>
 
@@ -178,6 +214,12 @@ const Register = () => {
                   type="button"
                   className="absolute left-50 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
                   onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    boxShadow: "none",
+                    background: "transparent",
+                    outline: "none",
+                    border: "none",
+                  }}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
