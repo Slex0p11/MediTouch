@@ -39,6 +39,7 @@ import AdminDoctorsPanel from "./pages/AdminPages/AdminDoctorsPanel";
 import DoctorDashboard from "./pages/DoctorPages/DoctorDashboard";
 import AppointmentForm from "./pages/UserPages/AppointmentForm";
 import AppointmentList from "./pages/UserPages/AppointmentList";
+ 
 
 const Myroutes = () => {
   return (
@@ -53,6 +54,7 @@ const Myroutes = () => {
           <Route path="/appointment" element={<Appointment />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/policy" element={<PrivacyPolicy />} />
+           
         </Route>
 
         {/* ----------------- User Authentication & Actions ----------------- */}
@@ -61,7 +63,7 @@ const Myroutes = () => {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/order" element={<Esewa />} />
         <Route path="/form" element={<AppointmentForm />} />
-        <Route path="/list" element={<AppointmentList />} />
+         
 
         <Route path="/paymentsuccess" element={<PaymentSuccess />} />
 
@@ -87,6 +89,10 @@ const Myroutes = () => {
           <Route path="medicineorders" element={<MedicineOrdered />} />
           <Route path="viewdoctor" element={<AdminDoctorsPanel />} />
           <Route path="approveddoctors" element={<ApprovedDoctorsList />} />
+          <Route path="list" element={<AppointmentList />} />
+           
+          
+           
         </Route>
       </Routes>
     </Router>

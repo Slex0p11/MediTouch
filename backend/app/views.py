@@ -559,3 +559,8 @@ class DeleteAppointmentView(APIView):
 
         except Appointment.DoesNotExist:
             return Response({"error": "Appointment not found"}, status=404)
+
+ 
+
+ 
+

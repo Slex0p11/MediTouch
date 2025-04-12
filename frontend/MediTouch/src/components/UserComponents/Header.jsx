@@ -81,11 +81,7 @@ const Header = () => {
               Appointments
             </Link>
           </li>
-          <li>
-            <Link to="#" className="hover:text-[#FF0000] text-[#000000] font-semibold text-[15px]">
-              Contact Us
-            </Link>
-          </li>
+           
           <li>
             <Link to="/about" className="hover:text-[#FF0000] text-[#000000] font-semibold text-[15px]">
               About Us
@@ -130,7 +126,7 @@ const Header = () => {
             // Login & Signup buttons (if user is not logged in)
             <>
               <button
-                className="px-4 py-2 text-sm rounded-full font-bold text-gray-500 border-2 bg-transparent hover:bg-gray-50"
+                className="px-4 py-2 text-sm rounded-full font-bold text-gray-900 border-2 bg-transparent hover:bg-gray-50"
                 onClick={() => navigate("/login")}
               >
                 Login

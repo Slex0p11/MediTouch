@@ -50,6 +50,7 @@ urlpatterns = [
     path('appointments/', AppointmentListView.as_view(), name='appointment-list'),
     path('appointments/<int:pk>/approve/', ApproveAppointmentView.as_view(), name='approve-appointment'),
     path('appointments/<int:pk>/delete/', DeleteAppointmentView.as_view(), name='delete-appointment'),
+     
     
     # Category APIs
     path('api/category/', AllCategory.as_view(), name='categorylist'),
@@ -61,6 +62,7 @@ urlpatterns = [
     path('api/categories/count/', CategoryCount.as_view(), name='category-count'),
     path('api/users/count/', UserCount.as_view(), name='user-count'),
     path('api/dashboard-stats/', DashboardStats.as_view(), name='dashboard-stats'),
+
 
 
     # Token Authentication
@@ -84,6 +86,7 @@ urlpatterns = [
     
     # Doctor Dashboard
     path('api/doctor/dashboard/', DoctorDashboardView.as_view(), name='doctor-dashboard'),
+     
 
 ]
 

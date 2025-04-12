@@ -230,3 +230,5 @@ class DoctorUserSerializer(serializers.ModelSerializer):
             return obj.doctor_profile.is_verified
         except Doctor.DoesNotExist:
             return False
+        
+ 

@@ -4,7 +4,6 @@ import axios from "axios";
 const AppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
 
-  // Fetch all appointments
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -18,7 +17,6 @@ const AppointmentList = () => {
     fetchAppointments();
   }, []);
 
-  // Approve handler
   const handleApprove = async (id) => {
     try {
       await axios.post(`http://localhost:8000/appointments/${id}/approve/`);
@@ -34,7 +32,6 @@ const AppointmentList = () => {
     }
   };
 
-  // Delete handler
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/appointments/${id}/delete/`);
@@ -47,55 +44,66 @@ const AppointmentList = () => {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Appointment List</h1>
+    <div className="ml-64 p-8 max-w-7xl">
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">
+        📋 Appointment List
+      </h1>
 
       {appointments.length === 0 ? (
-        <p>No appointments available.</p>
+        <p className="text-gray-600 text-lg">No appointments available.</p>
       ) : (
-        <table className="w-full border-collapse border border-gray-300">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-2">ID</th>
-              <th className="border p-2">Email</th>
-              <th className="border p-2">Weeks</th>
-              <th className="border p-2">Price</th>
-              <th className="border p-2">Reason</th>
-              <th className="border p-2">Phone</th>
-              <th className="border p-2">Status</th>
-              <th className="border p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.map((appt) => (
-              <tr key={appt.id} className="text-center">
-                <td className="border p-2">{appt.id}</td>
-                <td className="border p-2">{appt.email}</td>
-                <td className="border p-2">{appt.Weeks}</td>
-                <td className="border p-2">Rs. {appt.price}</td>
-                <td className="border p-2">{appt.address}</td>
-                <td className="border p-2">{appt.phone}</td>
-                <td className="border p-2 font-semibold">{appt.status}</td>
-                <td className="border p-2">
-                  {appt.status !== "Approved" && (
-                    <button
-                      onClick={() => handleApprove(appt.id)}
-                      className="px-3 py-1 bg-green-500 text-white rounded mr-2"
-                    >
-                      Approve
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleDelete(appt.id)}
-                    className="px-3 py-1 bg-red-600 text-white rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
+          <table className="min-w-full table-auto">
+            <thead className="bg-blue-100 text-gray-800">
+              <tr>
+                <th className="px-4 py-3 text-left">ID</th>
+                <th className="px-4 py-3 text-left">Email</th>
+                <th className="px-4 py-3 text-left">Weeks</th>
+                <th className="px-4 py-3 text-left">Price</th>
+                <th className="px-4 py-3 text-left">Reason</th>
+                <th className="px-4 py-3 text-left">Phone</th>
+                <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {appointments.map((appt, index) => (
+                <tr
+                  key={appt.id}
+                  className={`text-sm transition-all duration-200 ${
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } hover:bg-gray-100`}
+                >
+                  <td className="px-4 py-3 text-black">{appt.id}</td>
+                  <td className="px-4 py-3 text-black">{appt.email}</td>
+                  <td className="px-4 py-3 text-black">{appt.Weeks}</td>
+                  <td className="px-4 py-3 text-black">Rs. {appt.price}</td>
+                  <td className="px-4 py-3 text-black">{appt.address}</td>
+                  <td className="px-4 py-3 text-black">{appt.phone}</td>
+                  <td className="px-4 py-3 font-semibold text-blue-600">
+                    {appt.status}
+                  </td>
+                  <td className="px-4 py-3">
+                    {appt.status !== "Approved" && (
+                      <button
+                        onClick={() => handleApprove(appt.id)}
+                        className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded shadow transition-all duration-200 mr-2"
+                      >
+                        Approve
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDelete(appt.id)}
+                      className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded shadow transition-all duration-200"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
