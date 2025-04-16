@@ -11,10 +11,10 @@ const RegisterDoc = () => {
     email: "",
     password: "",
     dob: "",
+    nmc_no: "",
+    degree: "",
     specialization: "",
     price: "",
-    license_file: null,
-    degree_file: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -26,23 +26,6 @@ const RegisterDoc = () => {
     });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({
-        ...formData,
-        [e.target.name]: file,
-      });
-      toast.success(
-        `${e.target.name.replace("_", " ")} uploaded successfully!`,
-        {
-          position: "top-right",
-          autoClose: 3000,
-        }
-      );
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -52,18 +35,13 @@ const RegisterDoc = () => {
 
     setIsSubmitting(true);
 
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value !== null && value !== "") data.append(key, value);
-    });
-
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/doctors/register/",
-        data,
+        formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
@@ -83,15 +61,11 @@ const RegisterDoc = () => {
         email: "",
         password: "",
         dob: "",
+        nmc_no: "",
+        degree: "",
         specialization: "",
         price: "",
-        license_file: null,
-        degree_file: null,
       });
-
-      // Clear file inputs
-      document.getElementById("license_file").value = "";
-      document.getElementById("degree_file").value = "";
     } catch (err) {
       let errorMsg = "Registration failed. Please try again.";
 
@@ -280,6 +254,44 @@ const RegisterDoc = () => {
 
               <div>
                 <label
+                  htmlFor="nmc_no"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  NMC Number *
+                </label>
+                <input
+                  type="number"
+                  name="nmc_no"
+                  id="nmc_no"
+                  value={formData.nmc_no}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="degree"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Degree *
+                </label>
+                <input
+                  type="text"
+                  name="degree"
+                  id="degree"
+                  value={formData.degree}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label
                   htmlFor="price"
                   className="block text-sm font-medium text-gray-700"
                 >
@@ -315,78 +327,6 @@ const RegisterDoc = () => {
                 required
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Medical License *
-              </label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                <div className="space-y-1 text-center">
-                  <div className="flex text-sm text-gray-600 justify-center">
-                    <label
-                      htmlFor="license_file"
-                      className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
-                    >
-                      <span>Upload a file</span>
-                      <input
-                        id="license_file"
-                        name="license_file"
-                        type="file"
-                        onChange={handleFileChange}
-                        required
-                        className="sr-only"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                      />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    PDF, JPG, PNG up to 10MB
-                  </p>
-                  {formData.license_file && (
-                    <p className="text-xs text-green-600">
-                      {formData.license_file.name} selected
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Degree Certificate *
-              </label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                <div className="space-y-1 text-center">
-                  <div className="flex text-sm text-gray-600 justify-center">
-                    <label
-                      htmlFor="degree_file"
-                      className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
-                    >
-                      <span>Upload a file</span>
-                      <input
-                        id="degree_file"
-                        name="degree_file"
-                        type="file"
-                        onChange={handleFileChange}
-                        required
-                        className="sr-only"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                      />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    PDF, JPG, PNG up to 10MB
-                  </p>
-                  {formData.degree_file && (
-                    <p className="text-xs text-green-600">
-                      {formData.degree_file.name} selected
-                    </p>
-                  )}
-                </div>
-              </div>
             </div>
 
             <div>

@@ -113,8 +113,8 @@ class DoctorRegistrationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True, min_length=8)
     dob = serializers.DateField()
-    license_file = serializers.FileField()
-    degree_file = serializers.FileField()
+    nmc_no = serializers.IntegerField()
+    degree = serializers.CharField()
     specialization = serializers.CharField(max_length=100)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
 
@@ -145,8 +145,8 @@ class DoctorRegistrationSerializer(serializers.Serializer):
         # Create doctor profile
         doctor = Doctor.objects.create(
             user=user,
-            medical_license=validated_data['license_file'],
-            degree_certificate=validated_data['degree_file'],
+            nmc_no =validated_data['nmc_no'],
+            degree =validated_data['degree'],
             specialization=validated_data['specialization'],
             price=validated_data['price'],
               
@@ -159,8 +159,8 @@ class DoctorListSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source='user.last_name')
     email = serializers.CharField(source='user.email')
     dob = serializers.DateField(source='user.dob')
-    license_url = serializers.SerializerMethodField()
-    degree_url = serializers.SerializerMethodField()
+    nmc_no = serializers.IntegerField()
+    degree = serializers.CharField()
     is_rejected = serializers.BooleanField()
     rejection_reason = serializers.CharField()
     approved_date = serializers.DateTimeField(source='updated_at')
@@ -170,22 +170,13 @@ class DoctorListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'first_name', 'last_name', 'email', 'dob',
             'price',
-            'specialization', 'license_url', 'degree_url',
+            'specialization', 'nmc_no', 'degree',
             'is_verified', 'created_at','is_rejected', 
             'rejection_reason',
             'updated_at','approved_date'
         ]
         read_only_fields = fields
 
-    def get_license_url(self, obj):
-        if obj.medical_license:
-            return self.context['request'].build_absolute_uri(obj.medical_license.url)
-        return None
-
-    def get_degree_url(self, obj):
-        if obj.degree_certificate:
-            return self.context['request'].build_absolute_uri(obj.degree_certificate.url)
-        return None
  
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:

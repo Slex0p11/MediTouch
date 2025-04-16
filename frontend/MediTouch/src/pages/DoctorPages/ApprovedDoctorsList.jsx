@@ -92,7 +92,7 @@ const ApprovedDoctorsList = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-4">
                             <a 
-                              href={doctor.license_url} 
+                              href={doctor.nmc_no} 
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-blue-600 hover:text-blue-900 flex items-center"
@@ -103,7 +103,7 @@ const ApprovedDoctorsList = () => {
                               License
                             </a>
                             <a 
-                              href={doctor.degree_url} 
+                              href={doctor.degree} 
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-blue-600 hover:text-blue-900 flex items-center"

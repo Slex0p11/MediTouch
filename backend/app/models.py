@@ -73,7 +73,7 @@ class Order(models.Model):
     phone = models.CharField(max_length=15)
     image = models.URLField()
     status = models.CharField(max_length=50, default="Completed")
-    prescription = models.ImageField(upload_to="prescriptions/", null=False, blank=False)  # Ensure prescription is required
+    prescription = models.ImageField(upload_to="prescriptions/", null=False, blank=False)   
 
     def __str__(self):
         return self.medicine_name
@@ -83,13 +83,13 @@ class Doctor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='doctor_profile')
     specialization = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    medical_license = models.FileField(upload_to='doctor_licenses/')
-    degree_certificate = models.FileField(upload_to='doctor_certificates/')
+    degree = models.CharField(max_length=100)
+    nmc_no=models.IntegerField()
     is_verified = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
     rejection_reason = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)  # Track when status changes
+    updated_at = models.DateTimeField(auto_now=True)   
     
     class Meta:
         ordering = ['-created_at']

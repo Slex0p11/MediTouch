@@ -36,7 +36,7 @@ const Header = () => {
 
   const userEmail = user ? user.email : null;
   const userName = user ? user.username : null;
-  const userProfilePicture = user ? user.profile_picture : "https://i.imgur.com/Pul2AD6.png"; // Use profile picture if available, else fallback to default
+  const userProfilePicture = user ? user.profile_picture : "https://i.imgur.com/97fanbW.png"; // Use profile picture if available, else fallback to default
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");

@@ -14,7 +14,7 @@ const AdminDoctorsPanel = () => {
   const fetchPendingDoctors = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/admin/doctors/pending/"
+        "http://127.0.0.1:8000/api/doctors/pending/"
       );
       setPendingDoctors(response.data.doctors);
     } catch (error) {
@@ -28,13 +28,13 @@ const AdminDoctorsPanel = () => {
   const handleApprove = async (doctorId) => {
     try {
       const response = await axios.patch(
-        `http://127.0.0.1:8000/api/admin/doctors/approve/${doctorId}/`
+        `http://127.0.0.1:8000/api/doctors/${doctorId}/approve/`
       );
 
       toast.success(
         <div>
           <p>Doctor approved successfully!</p>
-          {response.data.message.includes("email sent") && (
+          {response.data.message && response.data.message.includes("email sent") && (
             <p>Notification email was sent to the doctor.</p>
           )}
         </div>
@@ -53,18 +53,14 @@ const AdminDoctorsPanel = () => {
   
     try {
       const response = await axios.patch(
-        `http://127.0.0.1:8000/api/admin/doctors/reject/${doctorId}/`,
+        `http://127.0.0.1:8000/api/doctors/${doctorId}/reject/`,
         { rejection_reason: rejectionReason }
       );
 
-      setPendingDoctors(prevDoctors => 
-        prevDoctors.filter(doctor => doctor.id !== doctorId)
-      );
-      
       toast.success(
         <div>
           <p>Doctor registration rejected</p>
-          {response.data.email_status.includes('sent') && (
+          {response.data.email_status && response.data.email_status.includes('sent') && (
             <p>Notification email was sent to the doctor.</p>
           )}
         </div>
@@ -87,7 +83,6 @@ const AdminDoctorsPanel = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        {/* Header remains on the left */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Doctor Approvals</h1>
           <p className="text-gray-600 mt-2">
@@ -95,9 +90,7 @@ const AdminDoctorsPanel = () => {
           </p>
         </div>
 
-        {/* Right-aligned content container */}
         <div className="flex justify-end">
-          {/* Grid container with max-width */}
           <div className="w-full max-w-5xl">
             {pendingDoctors.length === 0 ? (
               <div className="bg-white rounded-lg shadow p-6 text-center">
@@ -133,7 +126,7 @@ const AdminDoctorsPanel = () => {
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-gray-800">
-                            {doctor.first_name} {doctor.last_name}
+                            {doctor.user?.first_name} {doctor.user?.last_name}
                           </h3>
                           <p className="text-gray-500">
                             {doctor.specialization}
@@ -157,7 +150,7 @@ const AdminDoctorsPanel = () => {
                               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                             />
                           </svg>
-                          {doctor.email}
+                          {doctor.user?.email}
                         </div>
                         <div className="flex items-center">
                           <svg
@@ -174,7 +167,7 @@ const AdminDoctorsPanel = () => {
                               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                             />
                           </svg>
-                          {new Date(doctor.dob).toLocaleDateString()}
+                          {doctor.user?.dob && new Date(doctor.user.dob).toLocaleDateString()}
                         </div>
                         <div className="flex items-center">
                           <svg
@@ -188,27 +181,27 @@ const AdminDoctorsPanel = () => {
                               strokeLinecap="round"
                               strokeLinejoin="round"
                               strokeWidth={2}
-                              d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
+                              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                             />
                           </svg>
-                          <div className="flex space-x-3">
-                            <a
-                              href={doctor.license_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline"
-                            >
-                              View License
-                            </a>
-                            <a
-                              href={doctor.degree_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline"
-                            >
-                              View Degree
-                            </a>
-                          </div>
+                          NMC No: {doctor.nmc_no}
+                        </div>
+                        <div className="flex items-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-2 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                          Degree: {doctor.degree}
                         </div>
                         <div className="flex items-center">
                           <svg
@@ -226,7 +219,7 @@ const AdminDoctorsPanel = () => {
                             />
                           </svg>
                           Registered:{" "}
-                          {new Date(doctor.created_at).toLocaleDateString()}
+                          {doctor.created_at && new Date(doctor.created_at).toLocaleDateString()}
                         </div>
                       </div>
 
@@ -253,7 +246,7 @@ const AdminDoctorsPanel = () => {
                         </button>
                         <button
                           onClick={() => handleReject(doctor.id)}
-                          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 ml-2"
+                          className="ml-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                         >
                           Reject
                         </button>
